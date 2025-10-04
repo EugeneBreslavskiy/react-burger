@@ -1,0 +1,12 @@
+.burgerIngredient {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 4px;
+    position: relative;
+}
+
+.burgerIngredientName {
+    text-align: center;
+}

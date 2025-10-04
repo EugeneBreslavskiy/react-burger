@@ -1,7 +1,15 @@
-import PropTypes from "prop-types";
+import {FC, ReactNode} from "react";
+
 import styles from './nav-link.module.css';
 
-const AppNavLink = ({ to, icon, text, active }) => {
+interface INavLink {
+    to: string;
+    icon: ReactNode;
+    text: string;
+    active?: boolean;
+}
+
+const NavLink: FC<INavLink> = ({ to, icon, text, active }) => {
     return (
         <a
             href={to}
@@ -13,11 +21,4 @@ const AppNavLink = ({ to, icon, text, active }) => {
     );
 };
 
-AppNavLink.propTypes = {
-    to: PropTypes.string.isRequired,
-    text: PropTypes.string.isRequired,
-    icon: PropTypes.node.isRequired,
-    active: PropTypes.bool,
-};
-
-export { AppNavLink };
+export { NavLink };

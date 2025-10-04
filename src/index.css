@@ -15,6 +15,12 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  scrollbar-color: #8585AD #2F2F37;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #555;   /* сам ползунок */
+  border-radius: 0;
 }
 
 code {
