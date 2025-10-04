@@ -1,6 +1,5 @@
 import {GroupedIngredients, IngredientSchema, typeTitles} from "../types/ingredients";
 import {FILTERS} from "./filters";
-import { data } from "./data";
 
 export function groupIngredientsByType(items: IngredientSchema[]): GroupedIngredients[] {
     const grouped = items.reduce<Record<string, IngredientSchema[]>>((acc, item) => {
@@ -19,6 +18,3 @@ export function groupIngredientsByType(items: IngredientSchema[]): GroupedIngred
         };
     });
 }
-
-const grouped = groupIngredientsByType(data);
-console.log(grouped);
