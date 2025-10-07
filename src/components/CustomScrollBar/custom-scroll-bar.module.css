@@ -1,0 +1,13 @@
+.customScrollBarContainer {
+    width: 100%;
+    height: 500px;
+    position: relative;
+    overflow: hidden;
+}
+
+.customScrollBarViewPort {
+    height: 100%;
+    overflow: hidden scroll;
+}
+
+

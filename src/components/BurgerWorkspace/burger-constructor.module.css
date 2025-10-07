@@ -1,0 +1,12 @@
+.burgerWorkspaceSection {
+    width: 100%;
+    padding: 40px 0 0 0;
+}
+
+.burgerWorkspace {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    width: 100%;
+    padding: 20px 0 0 0;
+}

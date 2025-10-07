@@ -1,0 +1,42 @@
+.burgerConstructorIngredientContainer {
+    padding: 0 8px 0 32px;
+}
+
+.burgerConstructorIngredient {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    height: 80px;
+    padding: 16px 24px;
+    background-color: rgba(28, 28, 33, 1);
+    border-radius: 40px;
+}
+
+.top {
+    border-radius: 88px 88px 40px 40px;
+}
+
+.bottom {
+    border-radius: 40px 40px 88px 88px;
+}
+
+.burgerIngredientImage {
+    display: block;
+    width: 80px;
+    height: 40px;
+}
+
+.burgerIngredientName {
+    display: block;
+    width: 254px;
+}
+
+.burgerIngredientPrice {
+    display: flex;
+    justify-content: flex-end;
+    width: 102px;
+}
+
+.burgerIngredientNameIcon {
+    width: 24px;
+}
