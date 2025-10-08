@@ -3,6 +3,8 @@ import {BurgerOrderDetailsSchema} from "../../types/ingredients";
 import DoneIcon from '../../images/done.svg'
 import {useOrderId} from "../../context/OrderContext/OrderContext";
 
+import styles from './burger-order-details.module.css';
+
 const BurgerOrderDetails: FC<BurgerOrderDetailsSchema> = ({id}) => {
     const {setOrderId} = useOrderId();
 
@@ -13,25 +15,23 @@ const BurgerOrderDetails: FC<BurgerOrderDetailsSchema> = ({id}) => {
     }, []);
 
     return (
-        <section>
-            <div>
-                <span>
+        <section className={styles.burgerOrderDetails}>
+            <div className={styles.burgerOrderIdContainer}>
+                <p className={`text text_type_digits-large ${styles.burgerOrderId}`}>
                     {id}
-                </span>
-                <span>
+                </p>
+                <p className={`text text_type_main-medium ${styles.burgerOrderIdText}`}>
                     идентификатор заказа
-                </span>
+                </p>
             </div>
-            <div>
-                <img alt={"Статус заказа"} src={DoneIcon}/>
-                <div>
-                    <span>
-                        Ваш заказ начали готовить
-                    </span>
-                    <span>
-                        Дождитесь готовности на орбитальной станции
-                    </span>
-                </div>
+            <img alt={"Статус заказа"} src={DoneIcon} className={styles.burgerOrderStatusImage}/>
+            <div className={styles.burgerOrderStatusTextContainer}>
+                <p className={`text text_type_main-small ${styles.burgerOrderStatusText}`}>
+                    Ваш заказ начали готовить
+                </p>
+                <p className={`text text_type_main-small text_color_inactive ${styles.burgerOrderStatusText}`}>
+                    Дождитесь готовности на орбитальной станции
+                </p>
             </div>
         </section>
     )

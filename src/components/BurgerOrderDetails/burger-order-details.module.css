@@ -1,0 +1,41 @@
+.burgerOrderDetails {
+    display: flex;
+    flex-direction: column;
+}
+
+.burgerOrderIdContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px
+}
+
+.burgerOrderId {
+    text-align: center;
+    text-shadow:
+        0 0 8px  rgba(51, 51, 255, 0.25),
+        0 0 16px rgba(51, 51, 255, 0.25),
+        0 4px 32px rgba(51, 51, 255, 0.5);
+}
+
+.burgerOrderIdText {
+    text-align: center;
+}
+
+.burgerOrderStatusImage {
+    display: block;
+    width: 120px;
+    height: 120px;
+    margin: 60px auto;
+}
+
+.burgerOrderStatusTextContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px
+}
+
+.burgerOrderStatusText {
+    text-align: center;
+}
