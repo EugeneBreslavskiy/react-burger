@@ -27,3 +27,18 @@ export type GroupedIngredients = {
     title: string;
     items: IngredientSchema[];
 };
+
+export type NutrientName = 'Калории,ккал' | 'Белки, г' | 'Жиры, г' | 'Углеводы, г';
+
+export interface IngredientNutrientSchema {
+    name: NutrientName;
+    value: number
+}
+
+export interface BurgerIngredientDetailsSchema extends Pick<IngredientSchema, 'image_large' | 'name'> {
+    nutrients: IngredientNutrientSchema[];
+}
+
+export interface BurgerOrderDetailsSchema {
+    id: string | undefined;
+}
