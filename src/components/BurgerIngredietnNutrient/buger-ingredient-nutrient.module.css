@@ -1,0 +1,9 @@
+.burgerIngredientNutrient {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.burgerIngredientNutrientProperty {
+    text-align: center;
+}
