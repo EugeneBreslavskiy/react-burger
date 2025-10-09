@@ -1,6 +1,6 @@
 import React, {FC, useCallback, useEffect} from "react";
 import {
-    BurgerOrderDetailsSchema,
+    OrderDetailsSchema,
     IngredientNutrientSchema,
     IngredientSchema,
     IngredientsSchema
@@ -13,8 +13,8 @@ import {Container} from "../Container/Container";
 import {BurgerIngredients} from "../BurgerIngredients/BurgerIngredients";
 import {BurgerConstructor} from "../BurgerConstructor/BurgerConstructor";
 import {Modal} from "../Modal/Modal";
-import {BurgerIngredientDetails} from "../BurgerIngredientDetails/BurgerIngredientDetails";
-import {BurgerOrderDetails} from "../BurgerOrderDetails/BurgerOrderDetails";
+import {IngredientDetails} from "../IngredientDetails/IngredientDetails";
+import {OrderDetails} from "../OrderDetails/OrderDetails";
 
 import styles from "./burger-constructor.module.css";
 
@@ -62,11 +62,11 @@ const BurgerWorkspace: FC<IngredientsSchema> = ({ingredients}) => {
             }
         ]
 
-        setRenderModal({render: true, children: <BurgerIngredientDetails image_large={image_large} name={name} nutrients={nutrients} />})
+        setRenderModal({render: true, children: <IngredientDetails image_large={image_large} name={name} nutrients={nutrients} />})
     }, []);
 
-    const renderOrderModal = useCallback(({id}: BurgerOrderDetailsSchema) => {
-        setRenderModal({render: true, children: <BurgerOrderDetails id={id}/>})
+    const renderOrderModal = useCallback(({id}: OrderDetailsSchema) => {
+        setRenderModal({render: true, children: <OrderDetails id={id}/>})
     }, []);
 
     return (

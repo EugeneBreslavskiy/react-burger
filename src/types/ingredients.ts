@@ -35,10 +35,10 @@ export interface IngredientNutrientSchema {
     value: number
 }
 
-export interface BurgerIngredientDetailsSchema extends Pick<IngredientSchema, 'image_large' | 'name'> {
+export interface IngredientDetailsSchema extends Pick<IngredientSchema, 'image_large' | 'name'> {
     nutrients: IngredientNutrientSchema[];
 }
 
-export interface BurgerOrderDetailsSchema {
+export interface OrderDetailsSchema {
     id: string | undefined;
 }

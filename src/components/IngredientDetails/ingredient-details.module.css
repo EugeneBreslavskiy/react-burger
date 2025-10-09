@@ -1,8 +1,8 @@
-.burgerIngredientContainer {
+.IngredientContainer {
     width: 100%;
 }
 
-.burgerIngredient {
+.Ingredient {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -10,17 +10,17 @@
     margin: 0 auto;
 }
 
-.burgerIngredientTitleContainer {
+.IngredientTitleContainer {
     display: flex;
     align-items: center;
     min-height: 64px;
 }
 
-.burgerIngredientImage {
+.IngredientImage {
     margin: 0 0 16px 0;
 }
 
-.burgerIngredientNutrients {
+.IngredientNutrients {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;

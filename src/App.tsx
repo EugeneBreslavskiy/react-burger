@@ -15,10 +15,14 @@ function App() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const ingredients = await httpClient.get<IngredientSchema[]>('ingredients');
-
-            setData(ingredients);
-        }
+            try {
+                const ingredients = await httpClient.get<IngredientSchema[]>('ingredients');
+                setData(ingredients);
+            } catch (error) {
+                console.error('Failed to fetch ingredients:', error);
+                setData([]);
+            }
+        };
 
         fetchData();
     }, []);

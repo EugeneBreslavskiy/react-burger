@@ -1,7 +1,7 @@
 import React, {FC, SyntheticEvent, useEffect, useMemo} from 'react';
+import {ConstructorElement, Button} from "@ya.praktikum/react-developer-burger-ui-components";
 import {IngredientsSchema} from "../../types/ingredients";
 import {useOrderId} from "../../context/OrderContext/OrderContext";
-import {BurgerConstructorIngredient} from "../BurgerConstructorIngredient/BurgerConstructorIngredient";
 import {BurgerCredit} from "../BurgerCredit/BurgerCredit";
 import {CustomScrollBar} from "../CustomScrollBar/CustomScrollBar";
 
@@ -24,29 +24,42 @@ const BurgerConstructor: FC<IngredientsSchema> = ({ingredients}) => {
     }
 
     return (
-        <>
-            <section>
-                <div className={styles.BurgerConstructor}>
-                    <BurgerConstructorIngredient bun={'top'} locked={true} {...ingredients[0]}/>
-                    <CustomScrollBar height={464}>
-                        <ul className={styles.BurgerConstructorIngredients}>
-                            {_ingredients.map((ingredient, i) =>
-                                <li key={String(`${ingredient._id}_${i}`)}>
-                                    <BurgerConstructorIngredient {...ingredient}/>
-                                </li>
-                            )}
-                        </ul>
-                    </CustomScrollBar>
-                    <BurgerConstructorIngredient bun={'bottom'} locked={true} {...ingredients[0]}/>
-                </div>
-                <form className={styles.BurgerConstructorForm} onSubmit={onSubmitHandler}>
-                    <BurgerCredit amount={610}/>
-                    <button type={'submit'} className={`${styles.BurgerConstructorButton} text text_type_main-default`}>
-                        Оформить заказ
-                    </button>
-                </form>
-            </section>
-        </>
+        <section>
+            <div className={styles.BurgerConstructor}>
+                <ConstructorElement
+                    type="top"
+                    isLocked={true}
+                    text={ingredients[0].name}
+                    price={ingredients[0].price}
+                    thumbnail={ingredients[0].image}
+                />
+                <CustomScrollBar height={464}>
+                    <ul className={styles.BurgerConstructorIngredients}>
+                        {_ingredients.map(({_id, name, price, image}, i) =>
+                            <ConstructorElement
+                                key={String(`${_id}_${i}`)}
+                                text={name}
+                                price={price}
+                                thumbnail={image}
+                            />
+                        )}
+                    </ul>
+                </CustomScrollBar>
+                <ConstructorElement
+                    type="bottom"
+                    isLocked={true}
+                    text={ingredients[0].name}
+                    price={ingredients[0].price}
+                    thumbnail={ingredients[0].image}
+                />
+            </div>
+            <form className={styles.BurgerConstructorForm} onSubmit={onSubmitHandler}>
+                <BurgerCredit amount={610}/>
+                <Button htmlType="button" type="primary" size="large">
+                    Оформить заказ
+                </Button>
+            </form>
+        </section>
     );
 };
 
