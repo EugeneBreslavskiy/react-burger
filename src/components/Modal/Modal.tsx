@@ -32,7 +32,7 @@ const Modal: FC = () => {
     }, [renderModal]);
 
     const onCloseHandler = () => {
-        setRenderModal({render: false, children: <></>});
+        setRenderModal({render: false, children: null});
     }
 
     const html =

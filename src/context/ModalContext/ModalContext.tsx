@@ -8,7 +8,7 @@ interface RenderModalSchema {
 interface ModalContextSchema {
     renderModal?: {
         render: boolean;
-        children: ReactNode;
+        children: ReactNode | null;
     };
     setRenderModal: (render: RenderModalSchema) => void;
 }

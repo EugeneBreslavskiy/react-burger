@@ -20,6 +20,8 @@ const BurgerConstructor: FC<IngredientsSchema> = ({ingredients}) => {
     const onSubmitHandler = (e: SyntheticEvent) => {
         e.preventDefault();
 
+        console.log('axaxa')
+
         setOrderId('034536');
     }
 
@@ -53,9 +55,9 @@ const BurgerConstructor: FC<IngredientsSchema> = ({ingredients}) => {
                     thumbnail={ingredients[0].image}
                 />
             </div>
-            <form className={styles.BurgerConstructorForm} onSubmit={onSubmitHandler}>
+            <form className={styles.BurgerConstructorForm}>
                 <BurgerCredit amount={610}/>
-                <Button htmlType="button" type="primary" size="large">
+                <Button htmlType="button" type="primary" size="large" onClick={onSubmitHandler}>
                     Оформить заказ
                 </Button>
             </form>
