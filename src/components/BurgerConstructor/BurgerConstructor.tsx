@@ -20,8 +20,6 @@ const BurgerConstructor: FC<IngredientsSchema> = ({ingredients}) => {
     const onSubmitHandler = (e: SyntheticEvent) => {
         e.preventDefault();
 
-        console.log('axaxa')
-
         setOrderId('034536');
     }
 
