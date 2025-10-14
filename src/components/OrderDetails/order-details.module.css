@@ -1,0 +1,41 @@
+.orderDetails {
+    display: flex;
+    flex-direction: column;
+}
+
+.orderIdContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px
+}
+
+.orderId {
+    text-align: center;
+    text-shadow:
+        0 0 8px  rgba(51, 51, 255, 0.25),
+        0 0 16px rgba(51, 51, 255, 0.25),
+        0 4px 32px rgba(51, 51, 255, 0.5);
+}
+
+.orderIdText {
+    text-align: center;
+}
+
+.orderStatusImage {
+    display: block;
+    width: 120px;
+    height: 120px;
+    margin: 60px auto;
+}
+
+.orderStatusTextContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px
+}
+
+.orderStatusText {
+    text-align: center;
+}

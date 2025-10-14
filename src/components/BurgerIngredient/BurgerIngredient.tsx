@@ -10,10 +10,10 @@ interface IBurgerIngredient {
 }
 
 const BurgerIngredient: FC<IBurgerIngredient> = ({description}) => {
-    const {name, image, price} = description;
+    const {_id, name, image, price} = description;
 
     return (
-        <li className={styles.burgerIngredient}>
+        <li className={styles.burgerIngredient} data-id={_id}>
             <img src={image} alt={name}/>
             <BurgerCredit amount={price}/>
             <span className={`text text_type_main-default ${styles.burgerIngredientName}`}>

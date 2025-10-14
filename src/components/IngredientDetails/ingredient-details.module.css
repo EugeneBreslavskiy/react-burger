@@ -1,0 +1,29 @@
+.ingredientContainer {
+    width: 100%;
+}
+
+.ingredient {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 520px;
+    margin: 0 auto;
+}
+
+.ingredientTitleContainer {
+    display: flex;
+    align-items: center;
+    min-height: 64px;
+}
+
+.ingredientImage {
+    margin: 0 0 16px 0;
+}
+
+.ingredientNutrients {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    width: 100%;
+    padding: 32px 0 0 0;
+}
