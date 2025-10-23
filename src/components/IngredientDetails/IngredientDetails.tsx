@@ -1,18 +1,20 @@
 import React, {FC, useEffect} from 'react';
 import {IngredientDetailsSchema} from "../../types/ingredients";
 import {BurgerIngredientNutrient} from "../BurgerIngredietnNutrient/BurgerIngredientNutrient";
-import {useIngredientId} from "../../context/IngredientIdContext/IngredientIdContext";
+import { useDispatch } from 'react-redux';
+import type { AppDispatch } from '../../services/store';
+import { clearIngredientId } from '../../services/ingredientIdSlice';
 
 import styles from './ingredient-details.module.css';
 
 const IngredientDetails: FC<IngredientDetailsSchema> = ({image_large, name, nutrients}) => {
-    const {setIngredientId} = useIngredientId();
+    const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
         return () => {
-            setIngredientId(undefined);
+            dispatch(clearIngredientId());
         }
-    }, []);
+    }, [dispatch]);
 
     return (
         <section className={styles.ingredientContainer}>
