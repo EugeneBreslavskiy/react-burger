@@ -5,8 +5,8 @@ import {
     IngredientSchema,
     IngredientsSchema
 } from "../../types/ingredients";
-import {useIngredientId} from "../../context/IngredientIdContext/IngredientIdContext";
-import {useOrderId} from "../../context/OrderContext/OrderContext";
+import { useSelector } from 'react-redux';
+import type { RootState } from '../../services/store';
 import {useModal} from "../../context/ModalContext/ModalContext";
 import {Title} from "../Title/Title";
 import {Container} from "../Container/Container";
@@ -20,8 +20,8 @@ import styles from "./burger-constructor.module.css";
 
 const BurgerWorkspace: FC<IngredientsSchema> = ({ingredients}) => {
     const {setRenderModal} = useModal();
-    const {ingredientId} = useIngredientId();
-    const {orderId}  = useOrderId();
+    const ingredientId = useSelector((s: RootState) => s.ingredientId.ingredientId);
+    const orderId = useSelector((s: RootState) => s.orderId.orderId);
 
     useEffect(() => {
         if (ingredientId) {
@@ -34,7 +34,6 @@ const BurgerWorkspace: FC<IngredientsSchema> = ({ingredients}) => {
     }, [ingredientId, ingredients]);
 
     useEffect(() => {
-
         if (orderId) {
             renderOrderModal({id: orderId});
         }
@@ -75,7 +74,7 @@ const BurgerWorkspace: FC<IngredientsSchema> = ({ingredients}) => {
                 <Title>Соберите бургер</Title>
                 <div className={styles.burgerWorkspace}>
                     <BurgerIngredients ingredients={ingredients}/>
-                    <BurgerConstructor ingredients={ingredients}/>
+                    <BurgerConstructor />
                 </div>
             </Container>
             <Modal/>

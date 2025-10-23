@@ -1,41 +1,27 @@
-import React, {useEffect, useState} from 'react';
-import {IngredientIdProvider} from "./context/IngredientIdContext/IngredientIdContext";
+import React, {useEffect} from 'react';
 import {Header} from "./components/Header/Header";
 import {BurgerWorkspace} from "./components/BurgerWorkspace/BurgerWorkspace";
-import {HttpClient} from "./utils/httpClient";
-import {API_URL} from "./utils/api";
-import {IngredientSchema} from "./types/ingredients";
+import {useDispatch, useSelector} from 'react-redux';
+import {fetchIngredients} from './services/ingredientsSlice';
+import type {AppDispatch, RootState} from './services/store';
 import {ModalProvider} from "./context/ModalContext/ModalContext";
-import {OrderProvider} from "./context/OrderContext/OrderContext";
-
-const httpClient = new HttpClient({baseUrl: API_URL});
 
 function App() {
-    const [data, setData] = useState<IngredientSchema[] | null>(null);
+    const dispatch = useDispatch<AppDispatch>();
+    const items = useSelector((state: RootState) => state.ingredients.items);
+    const loading = useSelector((state: RootState) => state.ingredients.loading);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const ingredients = await httpClient.get<IngredientSchema[]>('ingredients');
-                setData(ingredients);
-            } catch (error) {
-                console.error('Failed to fetch ingredients:', error);
-                setData([]);
-            }
-        };
-
-        fetchData();
-    }, []);
+        if (loading === 'idle') {
+            dispatch(fetchIngredients());
+        }
+    }, [dispatch, loading]);
 
     return (
-        <IngredientIdProvider>
-            <OrderProvider>
-                <ModalProvider>
-                    <Header/>
-                    {Array.isArray(data) && data?.length > 0 && <BurgerWorkspace ingredients={data}/>}
-                </ModalProvider>
-            </OrderProvider>
-        </IngredientIdProvider>
+        <ModalProvider>
+            <Header/>
+            {Array.isArray(items) && items.length > 0 && <BurgerWorkspace ingredients={items}/>}
+        </ModalProvider>
     );
 }
 
