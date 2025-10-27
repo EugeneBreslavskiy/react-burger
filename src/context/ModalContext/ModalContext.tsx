@@ -31,7 +31,7 @@ const useModal = () => {
     const context = useContext(ModalContext);
 
     if (!context) {
-        throw new Error('useIngredientId must be used within a IngredientIdProvider');
+        throw new Error('useModal must be used within a ModalProvider');
     }
 
     return context;
