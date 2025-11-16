@@ -1,0 +1,34 @@
+.UserFormContainer {
+  max-width: 480px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.UserFormTitle {
+  margin: 0 0 24px 0;
+  text-align: center;
+}
+
+.UserFormField {
+  margin-bottom: 24px;
+}
+
+.UserFormButton {
+  margin: 24px auto 80px auto;
+  display: block;
+}
+
+.UserFormNav {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+
+.UserFormNav a {
+  color: #4C4CFF;
+  text-decoration: none;
+}
