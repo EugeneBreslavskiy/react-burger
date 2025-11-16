@@ -5,11 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchIngredients } from './services/ingredientsSlice';
 import type { AppDispatch, RootState } from './services/store';
 import { ModalProvider } from "./context/ModalContext/ModalContext";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-} from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
@@ -18,11 +15,21 @@ import { ResetPasswordPage } from './pages/ResetPasswordPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { IngredientPage } from './pages/IngredientPage';
 import { ProtectedRouteElement } from './components/ProtectedRouteElement';
+import { IngredientDetailsOverlay } from './components/IngredientDetailsOverlay';
+import { PageSection } from './components/PageSection/PageSection';
+import { ProfileOrdersPage } from './pages/ProfileOrdersPage';
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
   const items = useSelector((state: RootState) => state.ingredients.items);
   const loading = useSelector((state: RootState) => state.ingredients.loading);
+  const location = useLocation();
+  const background = (location.state as any)?.background;
+  const backgroundFlag = React.useMemo(() => {
+    const flag = (location.state as any)?.background ? true : false;
+    const persisted = typeof window !== 'undefined' ? window.sessionStorage.getItem('ingredientsBackground') === 'true' : false;
+    return flag || persisted;
+  }, [location.state]);
 
   useEffect(() => {
     if (loading === 'idle') {
@@ -32,9 +39,9 @@ function App() {
 
   return (
     <ModalProvider>
-      <Router>
-        <Header />
-        <Routes>
+      <Header />
+      <PageSection>
+        <Routes location={background || location}>
           <Route
             path="/"
             element={
@@ -85,9 +92,20 @@ function App() {
               </ProtectedRouteElement>
             }
           />
+          <Route
+            path="/profile/orders"
+            element={
+              <ProtectedRouteElement authOnly>
+                <ProfileOrdersPage />
+              </ProtectedRouteElement>
+            }
+          />
           <Route path="/ingredients/:id" element={<IngredientPage />} />
         </Routes>
-      </Router>
+        {backgroundFlag && location.pathname.startsWith('/ingredients/') && (
+          <IngredientDetailsOverlay />
+        )}
+      </PageSection>
     </ModalProvider>
   );
 }

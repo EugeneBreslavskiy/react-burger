@@ -19,7 +19,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #555;   /* сам ползунок */
+  background-color: #555;
   border-radius: 0;
 }
 
@@ -28,7 +28,7 @@ code {
     monospace;
 }
 
-main {
+#root {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -40,4 +40,3 @@ main {
 a {
   cursor: pointer;
 }
-

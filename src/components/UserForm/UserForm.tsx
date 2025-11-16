@@ -13,6 +13,8 @@ export interface UserFormSchema {
   onSubmit: (e: FormEvent<HTMLFormElement>) => void;
   nav?: ReactNode | ReactNode[];
   children?: ReactNode;
+  showEmail?: boolean;
+  showPassword?: boolean;
 }
 
 const UserFormComponent: FC<UserFormSchema> = ({
@@ -26,6 +28,8 @@ const UserFormComponent: FC<UserFormSchema> = ({
   onSubmit,
   nav,
   children,
+  showEmail = true,
+  showPassword = true,
 }) => {
   const AnyInput: any = Input;
   const AnyPasswordInput: any = PasswordInput;
@@ -33,28 +37,32 @@ const UserFormComponent: FC<UserFormSchema> = ({
     <form className={styles.UserFormContainer} onSubmit={onSubmit} noValidate>
       <h1 className={`${styles.UserFormTitle} text text_type_main-large`}>{title}</h1>
 
-      <div className={styles.UserFormField}>
-        <AnyInput
-          type="email"
-          placeholder="E-mail"
-          value={email}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => onEmailChange(e.target.value)}
-          name="email"
-          required
-          autoComplete="email"
-          size="default"
-        />
-      </div>
+      {showEmail && (
+        <div className={styles.UserFormField}>
+          <AnyInput
+            type="email"
+            placeholder="E-mail"
+            value={email}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => onEmailChange(e.target.value)}
+            name="email"
+            required
+            autoComplete="email"
+            size="default"
+          />
+        </div>
+      )}
 
-      <div className={styles.UserFormField}>
-        <AnyPasswordInput
-          value={password}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => onPasswordChange(e.target.value)}
-          name="password"
-          required
-          autoComplete="current-password"
-        />
-      </div>
+      {showPassword && (
+        <div className={styles.UserFormField}>
+          <AnyPasswordInput
+            value={password}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => onPasswordChange(e.target.value)}
+            name="password"
+            required
+            autoComplete="current-password"
+          />
+        </div>
+      )}
 
       {children}
 

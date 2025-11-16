@@ -6,6 +6,7 @@ import { FormContainer } from '../components/FormContainer/FormContainer';
 import { UserForm } from '../components/UserForm/UserForm';
 import { registerUser } from '../services/authActions';
 import { Input } from '@ya.praktikum/react-developer-burger-ui-components';
+import { PageSection } from '../components/PageSection/PageSection';
 
 export const RegisterPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -28,17 +29,17 @@ export const RegisterPage = () => {
 
   const onSubmit = React.useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     const response = await dispatch(registerUser({
       email: formState.email,
       password: formState.password,
       name: formState.name,
     })).unwrap().catch(() => null);
-    
+
     if (!response?.success) return;
-    
+
     const from = (location.state as any)?.from?.pathname || '/';
-    
+
     navigate(from, { replace: true });
   }, [dispatch, formState.email, formState.password, formState.name, location, navigate]);
 
@@ -51,7 +52,7 @@ export const RegisterPage = () => {
   const AnyInput: any = Input;
 
   return (
-    <section>
+    <PageSection>
       <FormContainer>
         <UserForm
           title="Регистрация"
@@ -78,7 +79,7 @@ export const RegisterPage = () => {
           </div>
         </UserForm>
       </FormContainer>
-    </section>
+    </PageSection>
   );
 };
 

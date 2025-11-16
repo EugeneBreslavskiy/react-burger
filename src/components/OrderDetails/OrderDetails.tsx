@@ -1,16 +1,17 @@
 import {FC, useEffect} from 'react';
 import {OrderDetailsSchema} from "../../types/ingredients";
 import DoneIcon from '../../images/done.svg'
-import {useOrderId} from "../../context/OrderContext/OrderContext";
+import { useDispatch } from 'react-redux';
+import { clearOrderId } from '../../services/orderIdSlice';
 
 import styles from './order-details.module.css';
 
 const OrderDetails: FC<OrderDetailsSchema> = ({id}) => {
-    const {setOrderId} = useOrderId();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         return () => {
-            setOrderId(undefined);
+            dispatch(clearOrderId());
         }
     }, []);
 

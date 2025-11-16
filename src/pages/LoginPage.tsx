@@ -4,6 +4,7 @@ import type { AppDispatch } from '../services/store';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { UserForm } from '../components/UserForm/UserForm';
 import { FormContainer } from '../components/FormContainer/FormContainer';
+import { PageSection } from '../components/PageSection/PageSection';
 import { loginUser } from '../services/authActions';
 
 export const LoginPage = () => {
@@ -43,7 +44,7 @@ export const LoginPage = () => {
   ]), []);
 
   return (
-    <section>
+    <PageSection>
       <FormContainer>
         <UserForm
           title="Вход"
@@ -57,7 +58,7 @@ export const LoginPage = () => {
           nav={nav}
         />
       </FormContainer>
-    </section>
+    </PageSection>
   );
 };
 
