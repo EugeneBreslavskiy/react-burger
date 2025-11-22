@@ -37,16 +37,12 @@ export const IngredientDetailsOverlay: React.FC = () => {
       render: true,
       children: <IngredientDetails image_large={ingredient.image_large} name={ingredient.name} nutrients={nutrients} />
     });
+
     return () => {
       setRenderModal({ render: false, children: null });
-
-      sessionStorage.removeItem('ingredientsBackground');
-
       navigate(-1);
     };
   }, [setRenderModal, ingredient, navigate, nutrients]);
 
   return null;
 };
-
-

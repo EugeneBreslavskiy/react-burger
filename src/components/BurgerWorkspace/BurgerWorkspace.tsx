@@ -2,8 +2,7 @@ import React, { FC, useCallback, useEffect } from "react";
 import {
   OrderDetailsSchema,
   IngredientNutrientSchema,
-  IngredientSchema,
-  IngredientsSchema
+  IngredientSchema
 } from "../../types/ingredients";
 import { useSelector } from 'react-redux';
 import type { RootState } from "../../services/store";
@@ -18,10 +17,11 @@ import { OrderDetails } from "../OrderDetails/OrderDetails";
 
 import styles from "./burger-constructor.module.css";
 
-const BurgerWorkspace: FC<IngredientsSchema> = ({ ingredients }) => {
+const BurgerWorkspace: FC = () => {
   const { setRenderModal } = useModal();
   const ingredientId = useSelector((s: RootState) => s.ingredientId.ingredientId);
   const orderId = useSelector((s: RootState) => s.orderId.orderId);
+  const ingredients = useSelector((s: RootState) => s.ingredients.items);
 
   useEffect(() => {
     if (ingredientId) {
@@ -63,18 +63,18 @@ const BurgerWorkspace: FC<IngredientsSchema> = ({ ingredients }) => {
     ]
 
     setRenderModal({ render: true, children: <IngredientDetails image_large={image_large} name={name} nutrients={nutrients} /> })
-  }, []);
+  }, [setRenderModal]);
 
   const renderOrderModal = useCallback(({ id }: OrderDetailsSchema) => {
     setRenderModal({ render: true, children: <OrderDetails id={id} /> })
-  }, []);
+  }, [setRenderModal]);
 
   return (
     <section className={styles.burgerWorkspaceSection}>
       <Container>
         <Title>Соберите бургер</Title>
         <div className={styles.burgerWorkspace}>
-          <BurgerIngredients ingredients={ingredients} />
+          <BurgerIngredients />
           <BurgerConstructor />
         </div>
       </Container>

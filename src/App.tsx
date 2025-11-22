@@ -25,11 +25,6 @@ function App() {
   const loading = useSelector((state: RootState) => state.ingredients.loading);
   const location = useLocation();
   const background = (location.state as any)?.background;
-  const backgroundFlag = React.useMemo(() => {
-    const flag = (location.state as any)?.background ? true : false;
-    const persisted = typeof window !== 'undefined' ? window.sessionStorage.getItem('ingredientsBackground') === 'true' : false;
-    return flag || persisted;
-  }, [location.state]);
 
   useEffect(() => {
     if (loading === 'idle') {
@@ -47,7 +42,7 @@ function App() {
             element={
               <HomePage>
                 {Array.isArray(items) && items.length > 0 && (
-                  <BurgerWorkspace ingredients={items} />
+                  <BurgerWorkspace />
                 )}
               </HomePage>
             }
@@ -102,7 +97,7 @@ function App() {
           />
           <Route path="/ingredients/:id" element={<IngredientPage />} />
         </Routes>
-        {backgroundFlag && location.pathname.startsWith('/ingredients/') && (
+        {background && location.pathname.startsWith('/ingredients/') && (
           <IngredientDetailsOverlay />
         )}
       </PageSection>

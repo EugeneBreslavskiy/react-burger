@@ -23,9 +23,6 @@ const BurgerIngredientsList: FC<IBurgerIngredientsList> = ({ ingredients }) => {
 
     if (id) {
       dispatch(setIngredientId(id));
-      try {
-        sessionStorage.setItem('ingredientsBackground', 'true');
-      } catch { }
       navigate(`/ingredients/${id}`, { state: { background: location } });
     }
   }
