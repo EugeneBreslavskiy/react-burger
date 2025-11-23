@@ -1,5 +1,5 @@
-import React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useEffect, useMemo, FC, useRef } from 'react';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../services/store';
 import { IngredientDetails } from './IngredientDetails/IngredientDetails';
@@ -7,20 +7,29 @@ import { setIngredientId } from '../services/ingredientIdSlice';
 import type { IngredientNutrientSchema } from '../types/ingredients';
 import { useModal } from '../context/ModalContext/ModalContext';
 
-export const IngredientDetailsOverlay: React.FC = () => {
+export const IngredientDetailsOverlay: FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
   const items = useSelector((state: RootState) => state.ingredients.items);
-  const { setRenderModal } = useModal();
+  const { setRenderModal, renderModal } = useModal();
+  const backgroundPathRef = useRef<string | null>(null);
 
   const ingredient = items.find((it: any) => it._id === id);
 
-  React.useEffect(() => {
-    dispatch(setIngredientId(id));
+  useEffect(() => {
+    const background = (location.state as any)?.background;
+    backgroundPathRef.current = background?.pathname || '/';
+  }, [location]);
+
+  useEffect(() => {
+    if (id) {
+      dispatch(setIngredientId(id));
+    }
   }, [dispatch, id]);
 
-  const nutrients: IngredientNutrientSchema[] = React.useMemo(() => {
+  const nutrients: IngredientNutrientSchema[] = useMemo(() => {
     if (!ingredient) return [];
     return [
       { name: 'Калории,ккал', value: ingredient.calories },
@@ -30,7 +39,7 @@ export const IngredientDetailsOverlay: React.FC = () => {
     ];
   }, [ingredient]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!ingredient) return;
 
     setRenderModal({
@@ -40,9 +49,10 @@ export const IngredientDetailsOverlay: React.FC = () => {
 
     return () => {
       setRenderModal({ render: false, children: null });
-      navigate(-1);
     };
-  }, [setRenderModal, ingredient, navigate, nutrients]);
+  }, [setRenderModal, ingredient, nutrients]);
+
+
 
   return null;
 };

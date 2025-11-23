@@ -3,6 +3,7 @@ import { Header } from "./components/Header/Header";
 import { BurgerWorkspace } from "./components/BurgerWorkspace/BurgerWorkspace";
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchIngredients } from './services/ingredientsSlice';
+import { checkAuth } from './services/authActions';
 import type { AppDispatch, RootState } from './services/store';
 import { ModalProvider } from "./context/ModalContext/ModalContext";
 import { Routes, Route } from 'react-router-dom';
@@ -20,20 +21,24 @@ import { PageSection } from './components/PageSection/PageSection';
 import { ProfileOrdersPage } from './pages/ProfileOrdersPage';
 
 function App() {
-  const dispatch = useDispatch<AppDispatch>();
-  const items = useSelector((state: RootState) => state.ingredients.items);
-  const loading = useSelector((state: RootState) => state.ingredients.loading);
+    const dispatch = useDispatch<AppDispatch>();
+    const items = useSelector((state: RootState) => state.ingredients.items);
+    const loading = useSelector((state: RootState) => state.ingredients.loading);
   const location = useLocation();
   const background = (location.state as any)?.background;
 
   useEffect(() => {
-    if (loading === 'idle') {
-      dispatch(fetchIngredients());
-    }
-  }, [dispatch, loading]);
+    dispatch(checkAuth());
+  }, [dispatch]);
 
-  return (
-    <ModalProvider>
+    useEffect(() => {
+        if (loading === 'idle') {
+            dispatch(fetchIngredients());
+        }
+    }, [dispatch, loading]);
+
+    return (
+        <ModalProvider>
       <Header />
       <PageSection>
         <Routes location={background || location}>
@@ -97,12 +102,14 @@ function App() {
           />
           <Route path="/ingredients/:id" element={<IngredientPage />} />
         </Routes>
-        {background && location.pathname.startsWith('/ingredients/') && (
-          <IngredientDetailsOverlay />
+        {background && (
+          <Routes location={location}>
+            <Route path="/ingredients/:id" element={<IngredientDetailsOverlay />} />
+          </Routes>
         )}
       </PageSection>
-    </ModalProvider>
-  );
+        </ModalProvider>
+    );
 }
 
 export default App;

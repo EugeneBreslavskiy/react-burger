@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { loginUser, logoutUser, refreshToken, registerUser } from './authActions';
+import { loginUser, logoutUser, refreshToken, registerUser, getUser, checkAuth } from './authActions';
 
 export type AuthUser = {
   email: string;
@@ -79,6 +79,40 @@ const authSlice = createSlice({
       .addCase(logoutUser.rejected, (state, action) => {
         state.loading = 'failed';
         state.error = (action.payload as string) || action.error.message || 'Выход не удался';
+      })
+      .addCase(getUser.pending, state => {
+        state.loading = 'pending';
+        state.error = null;
+      })
+      .addCase(getUser.fulfilled, (state, action) => {
+        state.loading = 'succeeded';
+        state.user = action.payload.user;
+        state.isAuthenticated = true;
+      })
+      .addCase(getUser.rejected, (state, action) => {
+        state.loading = 'failed';
+        state.error = (action.payload as string) || action.error.message || 'Не удалось получить данные пользователя';
+        state.user = null;
+        state.isAuthenticated = false;
+      })
+      .addCase(checkAuth.pending, state => {
+        state.loading = 'pending';
+        state.error = null;
+      })
+      .addCase(checkAuth.fulfilled, (state, action) => {
+        state.loading = 'succeeded';
+        if (action.payload) {
+          state.user = action.payload;
+          state.isAuthenticated = true;
+        } else {
+          state.user = null;
+          state.isAuthenticated = false;
+        }
+      })
+      .addCase(checkAuth.rejected, state => {
+        state.loading = 'succeeded';
+        state.user = null;
+        state.isAuthenticated = false;
       });
   },
 });

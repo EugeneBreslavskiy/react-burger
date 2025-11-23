@@ -1,69 +1,40 @@
-import React, { FC, useCallback, useEffect } from "react";
+import React, { FC, useCallback, useEffect, useRef } from "react";
 import {
-  OrderDetailsSchema,
-  IngredientNutrientSchema,
-  IngredientSchema
+  OrderDetailsSchema
 } from "../../types/ingredients";
-import { useSelector } from 'react-redux';
-import type { RootState } from "../../services/store";
+import { useSelector, useDispatch } from 'react-redux';
+import type { RootState, AppDispatch } from "../../services/store";
 import { useModal } from "../../context/ModalContext/ModalContext";
 import { Title } from "../Title/Title";
 import { Container } from "../Container/Container";
 import { BurgerIngredients } from "../BurgerIngredients/BurgerIngredients";
 import { BurgerConstructor } from "../BurgerConstructor/BurgerConstructor";
 import { Modal } from "../Modal/Modal";
-import { IngredientDetails } from "../IngredientDetails/IngredientDetails";
 import { OrderDetails } from "../OrderDetails/OrderDetails";
+import { clearOrderId } from '../../services/orderIdSlice';
+import { clearConstructor } from '../../services/constructorSlice';
 
 import styles from "./burger-constructor.module.css";
 
 const BurgerWorkspace: FC = () => {
-  const { setRenderModal } = useModal();
-  const ingredientId = useSelector((s: RootState) => s.ingredientId.ingredientId);
-  const orderId = useSelector((s: RootState) => s.orderId.orderId);
-  const ingredients = useSelector((s: RootState) => s.ingredients.items);
+  const { setRenderModal, renderModal } = useModal();
+  const dispatch = useDispatch<AppDispatch>();
+  const orderId = useSelector((state: RootState) => state.orderId.orderId);
+  const prevOrderIdRef = useRef<string | undefined>(undefined);
 
   useEffect(() => {
-    if (ingredientId) {
-      const ingredient = ingredients.find(({ _id }) => _id === ingredientId);
-
-      if (ingredient) {
-        renderIngredientModal(ingredient)
-      }
-    }
-  }, [ingredientId, ingredients]);
-
-  useEffect(() => {
-
     if (orderId) {
       renderOrderModal({ id: orderId });
+      prevOrderIdRef.current = orderId;
     }
   }, [orderId]);
 
-  const renderIngredientModal = useCallback((ingredient: IngredientSchema) => {
-    const { image_large, name, calories, proteins, fat, carbohydrates } = ingredient;
-
-    const nutrients: IngredientNutrientSchema[] = [
-      {
-        name: 'Калории,ккал',
-        value: calories
-      },
-      {
-        name: 'Белки, г',
-        value: proteins
-      },
-      {
-        name: 'Жиры, г',
-        value: fat
-      },
-      {
-        name: 'Углеводы, г',
-        value: carbohydrates
-      }
-    ]
-
-    setRenderModal({ render: true, children: <IngredientDetails image_large={image_large} name={name} nutrients={nutrients} /> })
-  }, [setRenderModal]);
+  useEffect(() => {
+    if (prevOrderIdRef.current && !orderId && !renderModal?.render) {
+      dispatch(clearConstructor());
+      prevOrderIdRef.current = undefined;
+    }
+  }, [orderId, renderModal, dispatch]);
 
   const renderOrderModal = useCallback(({ id }: OrderDetailsSchema) => {
     setRenderModal({ render: true, children: <OrderDetails id={id} /> })

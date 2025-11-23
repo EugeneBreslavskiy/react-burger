@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../services/store';
@@ -13,7 +13,7 @@ export const IngredientPage = () => {
 
   const ingredient = items.find((item: any) => item._id === id);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (id) {
       dispatch(setIngredientId(id));
     }
@@ -23,7 +23,7 @@ export const IngredientPage = () => {
     };
   }, [dispatch, id]);
 
-  const nutrients: IngredientNutrientSchema[] = React.useMemo(() => {
+  const nutrients: IngredientNutrientSchema[] = useMemo(() => {
     if (!ingredient) return [];
     return [
       { name: 'Калории,ккал', value: ingredient.calories },

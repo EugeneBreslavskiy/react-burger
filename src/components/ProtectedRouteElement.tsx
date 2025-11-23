@@ -16,8 +16,13 @@ export const ProtectedRouteElement: FC<ProtectedRouteProps> = ({
   guestOnly,
   requireForgotFlow,
 }) => {
-  const isAuthenticated = useSelector((s: RootState) => s.auth.isAuthenticated);
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+  const authLoading = useSelector((state: RootState) => state.auth.loading);
   const location = useLocation();
+
+  if (authLoading === 'pending') {
+    return null;
+  }
 
   if (requireForgotFlow) {
     const forgotVisited = typeof window !== 'undefined'

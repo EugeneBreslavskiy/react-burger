@@ -1,14 +1,14 @@
-import React from 'react';
+import { FC, ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
 import styles from './ProfileSidebar.module.css';
 
 type Props = {
   to: string;
   end?: boolean;
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
-export const SidebarLink: React.FC<Props> = ({ to, end, children }) => {
+export const SidebarLink: FC<Props> = ({ to, end, children }) => {
   return (
     <NavLink
       to={to}

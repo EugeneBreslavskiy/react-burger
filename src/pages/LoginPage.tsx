@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useCallback, useMemo, FormEvent } from 'react';
 import { useDispatch } from 'react-redux';
 import type { AppDispatch } from '../services/store';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
@@ -12,17 +12,17 @@ export const LoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [formState, setFormState] = React.useState({ email: '', password: '' });
+  const [formState, setFormState] = useState({ email: '', password: '' });
 
-  const setEmail = React.useCallback((value: string) => {
+  const setEmail = useCallback((value: string) => {
     setFormState(prev => ({ ...prev, email: value }));
   }, []);
 
-  const setPassword = React.useCallback((value: string) => {
+  const setPassword = useCallback((value: string) => {
     setFormState(prev => ({ ...prev, password: value }));
   }, []);
 
-  const onSubmit = React.useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = useCallback(async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const response = await dispatch(loginUser({ email: formState.email, password: formState.password })).unwrap().catch(() => null);
@@ -34,7 +34,7 @@ export const LoginPage = () => {
     navigate(from, { replace: true });
   }, [dispatch, formState.email, formState.password, location, navigate]);
 
-  const nav = React.useMemo(() => ([
+  const nav = useMemo(() => ([
     <div key="register" className="text text_type_main-default">
       Вы — новый пользователь? <Link to="/register">Зарегистрироваться</Link>
     </div>,

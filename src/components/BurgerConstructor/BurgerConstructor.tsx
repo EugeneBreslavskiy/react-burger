@@ -1,12 +1,12 @@
 import React, { FC, SyntheticEvent, useEffect, useMemo, useRef, useCallback } from 'react';
-import { ConstructorElement, Button } from "@ya.praktikum/react-developer-burger-ui-components";
+import { ConstructorElement, Button, DragIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../../services/store';
 import { setOrderId as setOrderIdAction, clearOrderId } from '../../services/orderIdSlice';
 import { BurgerCredit } from "../BurgerCredit/BurgerCredit";
 import { CustomScrollBar } from "../CustomScrollBar/CustomScrollBar";
 import { useDrop, useDrag } from 'react-dnd';
-import { addIngredient, removeIngredient, moveIngredient } from '../../services/constructorSlice';
+import { addIngredient, removeIngredient, moveIngredient, clearConstructor } from '../../services/constructorSlice';
 import { createOrder } from '../../services/orderSlice';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -17,8 +17,9 @@ const BurgerConstructor: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const constructorState = useSelector((s: RootState) => s.burgerConstructor);
-  const isAuthenticated = useSelector((s: RootState) => s.auth.isAuthenticated);
+  const constructorState = useSelector((state: RootState) => state.burgerConstructor);
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+  const orderLoading = useSelector((state: RootState) => state.order.loading);
 
   useEffect(() => {
     return () => {
@@ -78,6 +79,7 @@ const BurgerConstructor: FC = () => {
 
     return (
       <li ref={ref} className={styles.BurgerConstructorListItem} style={{ opacity: isDragging ? 0.5 : 1 }}>
+        <DragIcon type="primary" />
         <ConstructorElement
           text={item.name}
           price={item.price}
@@ -111,6 +113,7 @@ const BurgerConstructor: FC = () => {
       const orderNumber = await dispatch(createOrder(ids)).unwrap();
       if (orderNumber && orderNumber > 0) {
         dispatch(setOrderIdAction(String(orderNumber)));
+        dispatch(clearConstructor());
       }
     } catch (err) {
       console.error('Не удалось оформить заказ', err);
@@ -134,7 +137,7 @@ const BurgerConstructor: FC = () => {
           <ConstructorElement
             type="top"
             isLocked={true}
-            text={constructorState.bun.name}
+            text={`${constructorState.bun.name} (верх)`}
             price={constructorState.bun.price}
             thumbnail={constructorState.bun.image}
           />
@@ -156,7 +159,7 @@ const BurgerConstructor: FC = () => {
           <ConstructorElement
             type="bottom"
             isLocked={true}
-            text={constructorState.bun.name}
+            text={`${constructorState.bun.name} (низ)`}
             price={constructorState.bun.price}
             thumbnail={constructorState.bun.image}
           />
@@ -166,8 +169,14 @@ const BurgerConstructor: FC = () => {
       </div>
       <form className={styles.BurgerConstructorForm}>
         <BurgerCredit amount={totalPrice} />
-        <Button htmlType="button" type="primary" size="large" onClick={onSubmitHandler}>
-          Оформить заказ
+        <Button
+          htmlType="button"
+          type="primary"
+          size="large"
+          onClick={onSubmitHandler}
+          disabled={!constructorState?.bun || orderLoading === 'pending'}
+        >
+          {orderLoading === 'pending' ? 'Оформление заказа...' : 'Оформить заказ'}
         </Button>
       </form>
     </section>

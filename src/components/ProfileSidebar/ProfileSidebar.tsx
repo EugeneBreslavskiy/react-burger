@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 import { SidebarLink } from './SidebarLink';
 import styles from './ProfileSidebar.module.css';
 import { useDispatch } from 'react-redux';
@@ -6,7 +6,7 @@ import type { AppDispatch } from '../../services/store';
 import { logoutUser } from '../../services/authActions';
 import { useNavigate } from 'react-router-dom';
 
-export const ProfileSidebar: React.FC = () => {
+export const ProfileSidebar: FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   return (

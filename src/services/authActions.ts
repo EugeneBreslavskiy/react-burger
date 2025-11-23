@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { HttpClient } from '../utils/httpClient';
 import { API_URL } from '../utils/api';
-import { setCookie, deleteCookie } from '../utils/cookies';
+import { setCookie, deleteCookie, getCookie } from '../utils/cookies';
 import type { AuthUser } from './authSlice';
 
 type AuthResponse = {
@@ -104,6 +104,56 @@ export const logoutUser = createAsyncThunk<{ success: boolean; message?: string 
       return response;
     } catch (err) {
       return rejectWithValue((err as Error).message || 'Выход не удался');
+    }
+  }
+);
+
+type GetUserResponse = {
+  success: boolean;
+  user: AuthUser;
+};
+
+export const getUser = createAsyncThunk<GetUserResponse>(
+  'auth/getUser',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await httpClient.get<GetUserResponse>('auth/user');
+
+      if (!response?.success) throw new Error('Не удалось получить данные пользователя');
+
+      return response;
+    } catch (err) {
+      return rejectWithValue((err as Error).message || 'Не удалось получить данные пользователя');
+    }
+  }
+);
+
+export const checkAuth = createAsyncThunk<AuthUser | null>(
+  'auth/checkAuth',
+  async (_, { dispatch, rejectWithValue }) => {
+    try {
+      const accessToken = getCookie(ACCESS_COOKIE_KEY);
+      const refreshTokenValue = window.localStorage.getItem(REFRESH_STORAGE_KEY);
+
+      if (!accessToken && !refreshTokenValue) {
+        return null;
+      }
+
+      if (!accessToken && refreshTokenValue) {
+        const refreshResult = await dispatch(refreshToken()).unwrap();
+        if (!refreshResult?.success) {
+          return null;
+        }
+      }
+
+      const userResult = await dispatch(getUser()).unwrap();
+      if (!userResult?.success || !userResult.user) {
+        return null;
+      }
+
+      return userResult.user;
+    } catch (err) {
+      return null;
     }
   }
 );

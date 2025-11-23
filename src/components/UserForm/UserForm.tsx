@@ -1,4 +1,4 @@
-import React, { FC, FormEvent, ReactNode, memo } from 'react';
+import React, { FC, FormEvent, ReactNode, memo, ChangeEvent } from 'react';
 import { Input, PasswordInput, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './user-form.module.css';
 
@@ -43,7 +43,7 @@ const UserFormComponent: FC<UserFormSchema> = ({
             type="email"
             placeholder="E-mail"
             value={email}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => onEmailChange(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => onEmailChange(e.target.value)}
             name="email"
             required
             autoComplete="email"
@@ -56,7 +56,7 @@ const UserFormComponent: FC<UserFormSchema> = ({
         <div className={styles.UserFormField}>
           <AnyPasswordInput
             value={password}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => onPasswordChange(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => onPasswordChange(e.target.value)}
             name="password"
             required
             autoComplete="current-password"
@@ -70,7 +70,11 @@ const UserFormComponent: FC<UserFormSchema> = ({
         {submitText}
       </Button>
 
-      {nav ? <div className={styles.UserFormNav}>{Array.isArray(nav) ? nav : [nav]}</div> : null}
+      {nav ? (
+        <div className={styles.UserFormNav}>
+          {Array.isArray(nav) ? nav.map((item, index) => <React.Fragment key={index}>{item}</React.Fragment>) : nav}
+        </div>
+      ) : null}
 
       <input type="hidden" name="endpoint" value={endpoint || ''} />
     </form>

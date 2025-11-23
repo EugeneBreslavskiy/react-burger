@@ -1,17 +1,23 @@
 .BurgerConstructor {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .BurgerConstructorIngredients {
-    composes: BurgerConstructor;
+  composes: BurgerConstructor;
+}
+
+.BurgerConstructorListItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .BurgerConstructorForm {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 40px;
-    padding: 40px 0 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 40px;
+  padding: 40px 0 0 0;
 }

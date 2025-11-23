@@ -15,7 +15,7 @@ interface IBurgerIngredient {
 const BurgerIngredient: FC<IBurgerIngredient> = ({ description }) => {
   const { _id, name, image, price, type } = description;
 
-  const constructorState = useSelector((s: RootState) => s.burgerConstructor);
+  const constructorState = useSelector((state: RootState) => state.burgerConstructor);
   const count = (() => {
     if (type === 'bun') {
       return constructorState.bun && constructorState.bun._id === _id ? 2 : 0;

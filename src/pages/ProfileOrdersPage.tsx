@@ -1,9 +1,9 @@
-import React from 'react';
+import { FC } from 'react';
 import { PageSection } from '../components/PageSection/PageSection';
 import { ProfileLayout } from '../components/ProfileLayout/ProfileLayout';
 import { ProfileSidebar } from '../components/ProfileSidebar/ProfileSidebar';
 
-export const ProfileOrdersPage: React.FC = () => {
+export const ProfileOrdersPage: FC = () => {
   return (
     <PageSection>
       <ProfileLayout sidebar={<ProfileSidebar />}>
