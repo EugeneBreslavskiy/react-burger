@@ -14,7 +14,7 @@ interface IBurgerIngredientsList {
   sectionRefs: React.MutableRefObject<Record<string, HTMLElement | null>>;
 }
 
-interface SectionObserverProps {
+interface SectionObserverSchema {
   title: string;
   onInView: (title: string) => void;
   sectionRefs: React.MutableRefObject<Record<string, HTMLElement | null>>;
@@ -22,7 +22,7 @@ interface SectionObserverProps {
   children: React.ReactNode;
 }
 
-const SectionObserver: FC<SectionObserverProps> = ({ title, onInView, sectionRefs, scrollContainer, children }) => {
+const SectionObserver: FC<SectionObserverSchema> = ({ title, onInView, sectionRefs, scrollContainer, children }) => {
   const { ref, inView } = useInView({
     threshold: 0,
     root: scrollContainer,
@@ -82,10 +82,10 @@ const BurgerIngredientsList: FC<IBurgerIngredientsList> = ({ ingredients, onTabC
   return (
     <ul className={styles.burgerIngredientsList} ref={listRef} onClick={onClickHandler}>
       {ingredients.map(({ title, items }) => (
-        <SectionObserver 
-          key={title} 
-          title={title} 
-          onInView={onTabChange} 
+        <SectionObserver
+          key={title}
+          title={title}
+          onInView={onTabChange}
           sectionRefs={sectionRefs}
           scrollContainer={scrollContainer}
         >

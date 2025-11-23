@@ -6,6 +6,7 @@ import { ProfileLayout } from '../components/ProfileLayout/ProfileLayout';
 import { ProfileSidebar } from '../components/ProfileSidebar/ProfileSidebar';
 import { Container } from '../components/Container/Container';
 import { Input, PasswordInput, Button } from '@ya.praktikum/react-developer-burger-ui-components';
+import pageSectionStyles from '../components/PageSection/PageSection.module.css';
 
 interface ProfileForm {
   name: string;
@@ -51,7 +52,7 @@ export const ProfilePage = () => {
   };
 
   return (
-    <PageSection>
+    <PageSection className={pageSectionStyles.pageSectionWithPadding}>
       <Container>
         <ProfileLayout sidebar={<ProfileSidebar />}>
           <form onSubmit={(e) => e.preventDefault()}>

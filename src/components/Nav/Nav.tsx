@@ -5,14 +5,14 @@ import { Logo, BurgerIcon, ListIcon, ProfileIcon } from "@ya.praktikum/react-dev
 import styles from "./nav.module.css";
 import navLinkStyles from "../NavLink/nav-link.module.css";
 
-interface NavLinkProps {
+interface NavLinkSchema {
   to: string;
   IconComponent: typeof BurgerIcon;
   text: string;
   end?: boolean;
 }
 
-const NavLink: FC<NavLinkProps> = ({ to, IconComponent, text, end }) => {
+const NavLink: FC<NavLinkSchema> = ({ to, IconComponent, text, end }) => {
   return (
     <RouterNavLink
       to={to}

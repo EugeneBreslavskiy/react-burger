@@ -5,6 +5,9 @@ import type { RootState } from '../services/store';
 import { IngredientDetails } from '../components/IngredientDetails/IngredientDetails';
 import { setIngredientId } from '../services/ingredientIdSlice';
 import type { IngredientNutrientSchema } from '../types/ingredients';
+import { PageSection } from '../components/PageSection/PageSection';
+import { Container } from '../components/Container/Container';
+import pageSectionStyles from '../components/PageSection/PageSection.module.css';
 
 export const IngredientPage = () => {
   const { id } = useParams();
@@ -38,11 +41,15 @@ export const IngredientPage = () => {
   }
 
   return (
-    <IngredientDetails
-      image_large={ingredient.image_large}
-      name={ingredient.name}
-      nutrients={nutrients}
-    />
+    <PageSection className={pageSectionStyles.pageSectionWithPadding}>
+      <Container>
+        <IngredientDetails
+          image_large={ingredient.image_large}
+          name={ingredient.name}
+          nutrients={nutrients}
+        />
+      </Container>
+    </PageSection>
   );
 };
 

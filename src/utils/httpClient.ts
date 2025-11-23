@@ -1,55 +1,80 @@
+import { getCookie } from './cookies';
+
 interface HttpClientConfig {
-    baseUrl: string;
+  baseUrl: string;
 }
 
 class HttpClient {
-    readonly _baseUrl: string;
-    readonly _timeout: number;
+  readonly _baseUrl: string;
+  readonly _timeout: number;
+  private readonly ACCESS_COOKIE_KEY = 'accessToken';
 
   constructor({ baseUrl }: HttpClientConfig) {
-        this._baseUrl = baseUrl;
-        this._timeout = 5000;
+    this._baseUrl = baseUrl;
+    this._timeout = 5000;
+  }
+
+  private getHeaders(init?: RequestInit): HeadersInit {
+    const headers: HeadersInit = { 'Content-Type': 'application/json' };
+
+    const accessToken = getCookie(this.ACCESS_COOKIE_KEY);
+    if (accessToken) {
+      // API ожидает токен в заголовке Authorization
+      // Добавляем префикс "Bearer" если его еще нет
+      headers['Authorization'] = accessToken.startsWith('Bearer ')
+        ? accessToken
+        : `Bearer ${accessToken}`;
     }
 
-    async get<T>(path: string): Promise<T> {
-    return this.request(`${this._baseUrl}${path}`, { method: 'GET' });
+    if (init?.headers) {
+      Object.assign(headers, init.headers);
     }
 
-    async post<T>(path: string, body?: any, init?: RequestInit): Promise<T> {
-        const headers = Object.assign({ 'Content-Type': 'application/json' }, (init && init.headers) || {});
+    return headers;
+  }
 
-        const initReq: RequestInit = Object.assign({}, init, {
-            method: 'POST',
-            headers,
-            body: body !== undefined ? JSON.stringify(body) : undefined,
-        });
+  async get<T>(path: string, init?: RequestInit): Promise<T> {
+    return this.request(`${this._baseUrl}${path}`, {
+      method: 'GET',
+      headers: this.getHeaders(init),
+      ...init,
+    });
+  }
 
-        return this.request(`${this._baseUrl}${path}`, initReq);
-    }
+  async post<T>(path: string, body?: any, init?: RequestInit): Promise<T> {
+    const initReq: RequestInit = {
+      ...init,
+      method: 'POST',
+      headers: this.getHeaders(init),
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+    };
 
-    private async request<T>(input: RequestInfo, init?: RequestInit): Promise<T> {
-        const abortController = new AbortController();
-        const abortTimerId = setTimeout(() => abortController.abort(), this._timeout);
+    return this.request(`${this._baseUrl}${path}`, initReq);
+  }
 
-        try {
-            const response = await fetch(input, {
-                ...init,
+  private async request<T>(input: RequestInfo, init?: RequestInit): Promise<T> {
+    const abortController = new AbortController();
+    const abortTimerId = setTimeout(() => abortController.abort(), this._timeout);
+
+    try {
+      const response = await fetch(input, {
+        ...init,
         credentials: 'include',
-                signal: abortController.signal,
-            });
+        signal: abortController.signal,
+      });
 
-            if (!response.ok) {
+      if (!response.ok) {
         const text = await response.text().catch(() => response.statusText || `HTTP ошибка ${response.status}`);
         throw new Error(text || `HTTP ошибка ${response.status}`);
-            }
+      }
 
-            const parsed = await response.json().catch(() => ({}));
+      const parsed = await response.json().catch(() => ({}));
 
-            return parsed as T;
-        } finally {
-            clearTimeout(abortTimerId);
-        }
+      return parsed as T;
+    } finally {
+      clearTimeout(abortTimerId);
     }
+  }
 }
 
 export { HttpClient };

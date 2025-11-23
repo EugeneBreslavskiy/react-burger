@@ -134,13 +134,15 @@ const BurgerConstructor: FC = () => {
     <section>
       <div ref={dropRef as any} className={styles.BurgerConstructor} style={{ background: isOver ? 'transparent' : undefined }}>
         {constructorState?.bun ? (
-          <ConstructorElement
-            type="top"
-            isLocked={true}
-            text={`${constructorState.bun.name} (верх)`}
-            price={constructorState.bun.price}
-            thumbnail={constructorState.bun.image}
-          />
+          <div className={styles.BurgerConstructorBunWrapper}>
+            <ConstructorElement
+              type="top"
+              isLocked={true}
+              text={`${constructorState.bun.name} (верх)`}
+              price={constructorState.bun.price}
+              thumbnail={constructorState.bun.image}
+            />
+          </div>
         ) : (
           <div className={styles.BunPlaceholder + ' text text_type_main-default'}>Перетащите булку сверху</div>
         )}
@@ -156,13 +158,15 @@ const BurgerConstructor: FC = () => {
           </ul>
         </CustomScrollBar>
         {constructorState?.bun ? (
-          <ConstructorElement
-            type="bottom"
-            isLocked={true}
-            text={`${constructorState.bun.name} (низ)`}
-            price={constructorState.bun.price}
-            thumbnail={constructorState.bun.image}
-          />
+          <div className={styles.BurgerConstructorBunWrapper}>
+            <ConstructorElement
+              type="bottom"
+              isLocked={true}
+              text={`${constructorState.bun.name} (низ)`}
+              price={constructorState.bun.price}
+              thumbnail={constructorState.bun.image}
+            />
+          </div>
         ) : (
           <div className={styles.BunPlaceholder + ' text text_type_main-default'}>Перетащите булку снизу</div>
         )}

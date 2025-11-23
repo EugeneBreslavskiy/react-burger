@@ -3,14 +3,14 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../services/store';
 
-type ProtectedRouteProps = {
+interface ProtectedRouteSchema {
   children: ReactElement;
   authOnly?: boolean;
   guestOnly?: boolean;
   requireForgotFlow?: boolean;
-};
+}
 
-export const ProtectedRouteElement: FC<ProtectedRouteProps> = ({
+export const ProtectedRouteElement: FC<ProtectedRouteSchema> = ({
   children,
   authOnly,
   guestOnly,
@@ -20,7 +20,8 @@ export const ProtectedRouteElement: FC<ProtectedRouteProps> = ({
   const authLoading = useSelector((state: RootState) => state.auth.loading);
   const location = useLocation();
 
-  if (authLoading === 'pending') {
+  // Ждем завершения проверки авторизации (pending или idle означает, что проверка еще не завершена)
+  if (authLoading === 'pending' || authLoading === 'idle') {
     return null;
   }
 
