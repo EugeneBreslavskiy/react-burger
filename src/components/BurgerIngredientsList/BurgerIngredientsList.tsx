@@ -75,7 +75,7 @@ const BurgerIngredientsList: FC<IBurgerIngredientsList> = ({ ingredients, onTabC
 
     if (id) {
       dispatch(setIngredientId(id));
-      navigate(`/ingredients/${id}`, { state: { background: location } });
+      navigate(`/ingredients/${id}`, { state: { background: location }, replace: false });
     }
   }
 

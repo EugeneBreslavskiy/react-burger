@@ -1,5 +1,5 @@
 import { useEffect, useMemo, FC, useRef } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../services/store';
 import { IngredientDetails } from './IngredientDetails/IngredientDetails';
@@ -9,11 +9,10 @@ import { useModal } from '../context/ModalContext/ModalContext';
 
 export const IngredientDetailsOverlay: FC = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
   const items = useSelector((state: RootState) => state.ingredients.items);
-  const { setRenderModal, renderModal } = useModal();
+  const { setRenderModal } = useModal();
   const backgroundPathRef = useRef<string | null>(null);
 
   const ingredient = items.find((it: any) => it._id === id);
@@ -48,6 +47,7 @@ export const IngredientDetailsOverlay: FC = () => {
     });
 
     return () => {
+      // Cleanup при размонтировании компонента
       setRenderModal({ render: false, children: null });
     };
   }, [setRenderModal, ingredient, nutrients]);
