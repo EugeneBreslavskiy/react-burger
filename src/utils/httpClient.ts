@@ -59,7 +59,6 @@ class HttpClient {
     try {
       const response = await fetch(input, {
         ...init,
-        credentials: 'include',
         signal: abortController.signal,
       });
 
