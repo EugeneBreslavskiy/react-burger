@@ -1,5 +1,5 @@
-import { useEffect, useMemo, FC, useRef } from 'react';
-import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { useEffect, useMemo, FC } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../services/store';
 import { IngredientDetails } from './IngredientDetails/IngredientDetails';
@@ -9,19 +9,12 @@ import { useModal } from '../context/ModalContext/ModalContext';
 
 export const IngredientDetailsOverlay: FC = () => {
   const { id } = useParams();
-  const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const items = useSelector((state: RootState) => state.ingredients.items);
   const { setRenderModal } = useModal();
-  const backgroundPathRef = useRef<string | null>(null);
 
   const ingredient = items.find((it: any) => it._id === id);
-
-  useEffect(() => {
-    const background = (location.state as any)?.background;
-    backgroundPathRef.current = background?.pathname || '/';
-  }, [location]);
 
   useEffect(() => {
     if (id) {
@@ -42,10 +35,9 @@ export const IngredientDetailsOverlay: FC = () => {
   useEffect(() => {
     if (!ingredient) return;
 
-    // Функция закрытия модального окна с навигацией
+    // Функция закрытия модального окна с навигацией назад по истории
     const handleClose = () => {
-      const backgroundPath = backgroundPathRef.current || '/';
-      navigate(backgroundPath, { replace: true });
+      navigate(-1);
     };
 
     setRenderModal({
