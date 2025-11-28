@@ -1,5 +1,5 @@
 import { useEffect, useMemo, FC, useRef } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../services/store';
 import { IngredientDetails } from './IngredientDetails/IngredientDetails';
@@ -10,6 +10,7 @@ import { useModal } from '../context/ModalContext/ModalContext';
 export const IngredientDetailsOverlay: FC = () => {
   const { id } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const items = useSelector((state: RootState) => state.ingredients.items);
   const { setRenderModal } = useModal();
@@ -41,16 +42,23 @@ export const IngredientDetailsOverlay: FC = () => {
   useEffect(() => {
     if (!ingredient) return;
 
+    // Функция закрытия модального окна с навигацией
+    const handleClose = () => {
+      const backgroundPath = backgroundPathRef.current || '/';
+      navigate(backgroundPath, { replace: true });
+    };
+
     setRenderModal({
       render: true,
-      children: <IngredientDetails image_large={ingredient.image_large} name={ingredient.name} nutrients={nutrients} />
+      children: <IngredientDetails image_large={ingredient.image_large} name={ingredient.name} nutrients={nutrients} />,
+      onClose: handleClose
     });
 
     return () => {
       // Cleanup при размонтировании компонента
-      setRenderModal({ render: false, children: null });
+      setRenderModal({ render: false, children: null, onClose: undefined });
     };
-  }, [setRenderModal, ingredient, nutrients]);
+  }, [setRenderModal, ingredient, nutrients, navigate]);
 
 
 

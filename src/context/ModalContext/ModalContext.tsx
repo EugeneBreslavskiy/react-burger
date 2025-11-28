@@ -3,12 +3,14 @@ import { FC, ReactNode, createContext, useState, useMemo, useContext } from "rea
 interface RenderModalSchema {
   render: boolean;
   children: ReactNode;
+  onClose?: () => void;
 }
 
 interface ModalContextSchema {
   renderModal?: {
     render: boolean;
     children: ReactNode | null;
+    onClose?: () => void;
   };
   setRenderModal: (render: RenderModalSchema) => void;
 }
