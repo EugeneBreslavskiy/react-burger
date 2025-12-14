@@ -18,10 +18,12 @@ export const ProtectedRouteElement: FC<ProtectedRouteSchema> = ({
 }) => {
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   const authLoading = useSelector((state: RootState) => state.auth.loading);
+  const user = useSelector((state: RootState) => state.auth.user);
   const location = useLocation();
 
-  // Ждем завершения проверки авторизации (pending или idle означает, что проверка еще не завершена)
-  if (authLoading === 'pending' || authLoading === 'idle') {
+  // Ждем завершения проверки авторизации только при первой загрузке (idle)
+  // Если пользователь уже авторизован, не скрываем UI при pending (например, при обновлении профиля)
+  if (authLoading === 'idle' || (authLoading === 'pending' && !user)) {
     return null;
   }
 

@@ -11,19 +11,15 @@ class HttpClient {
 
   constructor({ baseUrl }: HttpClientConfig) {
     this._baseUrl = baseUrl;
-    this._timeout = 5000;
+    this._timeout = 60000;
   }
 
   private getHeaders(init?: RequestInit): HeadersInit {
-    const headers: HeadersInit = { 'Content-Type': 'application/json' };
+    const headers: HeadersInit = { 'Content-Type': 'application/json;charset=utf-8' };
 
     const accessToken = getCookie(this.ACCESS_COOKIE_KEY);
     if (accessToken) {
-      // API ожидает токен в заголовке Authorization
-      // Добавляем префикс "Bearer" если его еще нет
-      headers['Authorization'] = accessToken.startsWith('Bearer ')
-        ? accessToken
-        : `Bearer ${accessToken}`;
+      headers['Authorization'] = accessToken;
     }
 
     if (init?.headers) {
@@ -52,6 +48,17 @@ class HttpClient {
     return this.request(`${this._baseUrl}${path}`, initReq);
   }
 
+  async patch<T>(path: string, body?: any, init?: RequestInit): Promise<T> {
+    const initReq: RequestInit = {
+      ...init,
+      method: 'PATCH',
+      headers: this.getHeaders(init),
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+    };
+
+    return this.request(`${this._baseUrl}${path}`, initReq);
+  }
+
   private async request<T>(input: RequestInfo, init?: RequestInit): Promise<T> {
     const abortController = new AbortController();
     const abortTimerId = setTimeout(() => abortController.abort(), this._timeout);
@@ -70,6 +77,13 @@ class HttpClient {
       const parsed = await response.json().catch(() => ({}));
 
       return parsed as T;
+    } catch (err) {
+      // Обрабатываем ошибку прерывания запроса
+      if (err instanceof Error && err.name === 'AbortError') {
+        throw new Error('Превышено время ожидания ответа от сервера');
+      }
+      // Пробрасываем другие ошибки как есть
+      throw err;
     } finally {
       clearTimeout(abortTimerId);
     }

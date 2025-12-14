@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { loginUser, logoutUser, refreshToken, registerUser, getUser, checkAuth } from './authActions';
+import { loginUser, logoutUser, refreshToken, registerUser, getUser, checkAuth, updateUser } from './authActions';
 
 export type AuthUser = {
   email: string;
@@ -113,6 +113,19 @@ const authSlice = createSlice({
         state.loading = 'succeeded';
         state.user = null;
         state.isAuthenticated = false;
+      })
+      .addCase(updateUser.pending, state => {
+        state.loading = 'pending';
+        state.error = null;
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.loading = 'succeeded';
+        state.user = action.payload.user;
+        state.isAuthenticated = true;
+      })
+      .addCase(updateUser.rejected, (state, action) => {
+        state.loading = 'failed';
+        state.error = (action.payload as string) || action.error.message || 'Не удалось обновить данные пользователя';
       });
   },
 });

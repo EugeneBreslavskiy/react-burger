@@ -158,6 +158,30 @@ export const checkAuth = createAsyncThunk<AuthUser | null>(
   }
 );
 
+export const updateUser = createAsyncThunk<GetUserResponse, { name?: string; email?: string; password?: string }>(
+  'auth/updateUser',
+  async (payload, { rejectWithValue }) => {
+    try {
+      const cleanPayload: { name?: string; email?: string; password?: string } = {};
+      if (payload.name !== undefined) cleanPayload.name = payload.name;
+
+      if (payload.email !== undefined) cleanPayload.email = payload.email;
+
+      if (payload.password && payload.password.trim() !== '') {
+        cleanPayload.password = payload.password;
+      }
+
+      const response = await httpClient.patch<GetUserResponse>('auth/user', cleanPayload);
+
+      if (!response?.success) throw new Error('Не удалось обновить данные пользователя');
+
+      return response;
+    } catch (err) {
+      return rejectWithValue((err as Error).message || 'Не удалось обновить данные пользователя');
+    }
+  }
+);
+
 export { ACCESS_COOKIE_KEY, REFRESH_STORAGE_KEY };
 
 

@@ -180,7 +180,7 @@ const BurgerConstructor: FC = () => {
           onClick={onSubmitHandler}
           disabled={!constructorState?.bun || orderLoading === 'pending'}
         >
-          {orderLoading === 'pending' ? 'Оформление заказа...' : 'Оформить заказ'}
+          Оформить заказ
         </Button>
       </form>
     </section>
