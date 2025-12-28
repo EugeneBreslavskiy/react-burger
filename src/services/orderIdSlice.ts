@@ -22,6 +22,6 @@ const orderIdSlice = createSlice({
 });
 
 export const { setOrderId, clearOrderId } = orderIdSlice.actions;
-export const { reducer } = orderIdSlice;
-export { reducer as orderIdReducer };
+export const { reducer: orderIdReducer } = orderIdSlice;
+
 

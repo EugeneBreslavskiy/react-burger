@@ -15,13 +15,10 @@ const ingredientIdSlice = createSlice({
     setIngredientId(state, action: PayloadAction<string | undefined>) {
       state.ingredientId = action.payload;
     },
-    clearIngredientId(state) {
-      state.ingredientId = undefined;
-    },
   },
 });
 
-export const { setIngredientId, clearIngredientId } = ingredientIdSlice.actions;
-export const { reducer } = ingredientIdSlice;
-export { reducer as ingredientIdReducer };
+export const { setIngredientId } = ingredientIdSlice.actions;
+export const { reducer: ingredientIdReducer } = ingredientIdSlice;
+
 

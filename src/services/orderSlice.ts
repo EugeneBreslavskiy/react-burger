@@ -16,14 +16,43 @@ const initialState: OrderState = {
 
 const httpClient = new HttpClient({ baseUrl: API_URL });
 
+type OrderResponse = {
+  success?: boolean;
+  order?: {
+    number: number;
+  };
+  name?: string;
+};
+
 export const createOrder = createAsyncThunk<number, string[]>(
   'order/createOrder',
   async (ingredientIds, { rejectWithValue }) => {
     try {
-      const res = await httpClient.post<{ order?: { number: number } }>('orders', { ingredients: ingredientIds });
-      return (res.order && res.order.number) ? res.order.number : 0;
+      if (!ingredientIds || ingredientIds.length === 0) {
+        throw new Error('Необходимо выбрать ингредиенты');
+      }
+
+      const res = await httpClient.post<OrderResponse>('orders', { ingredients: ingredientIds });
+
+      // Проверяем различные варианты структуры ответа
+      if (res.order?.number) {
+        return res.order.number;
+      }
+
+      // Если структура ответа неожиданная, выбрасываем ошибку
+      throw new Error('Неверный формат ответа от сервера: отсутствует номер заказа');
     } catch (err) {
-      return rejectWithValue((err as Error).message || 'Failed to create order');
+      let errorMessage = 'Не удалось оформить заказ';
+
+      if (err instanceof Error) {
+        errorMessage = err.message;
+        // Если это ошибка таймаута, даем более понятное сообщение
+        if (err.message.includes('время ожидания') || err.message.includes('timeout')) {
+          errorMessage = 'Превышено время ожидания. Попробуйте еще раз';
+        }
+      }
+
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -45,7 +74,7 @@ const orderSlice = createSlice({
       })
       .addCase(createOrder.rejected, (state, action) => {
         state.loading = 'failed';
-        state.error = (action.payload as string) || action.error.message || 'Failed to create order';
+        state.error = (action.payload as string) || action.error.message || 'Не удалось оформить заказ';
       });
   },
 });

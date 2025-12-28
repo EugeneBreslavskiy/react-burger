@@ -21,7 +21,6 @@ const constructorSlice = createSlice({
   reducers: {
     addIngredient(state, action: PayloadAction<ConstructorItem>) {
       const item = { ...action.payload };
-
       if (item.type === 'bun') {
         state.bun = item;
       } else {
@@ -47,3 +46,5 @@ export const { addIngredient, removeIngredient, moveIngredient, clearConstructor
 const { reducer } = constructorSlice;
 
 export { reducer as constructorReducer };
+
+

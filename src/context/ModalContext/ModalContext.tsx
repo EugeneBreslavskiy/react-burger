@@ -1,40 +1,42 @@
-import {FC, ReactNode, createContext, useState, useMemo, useContext} from "react";
+import { FC, ReactNode, createContext, useState, useMemo, useContext } from "react";
 
 interface RenderModalSchema {
-    render: boolean;
-    children: ReactNode;
+  render: boolean;
+  children: ReactNode;
+  onClose?: () => void;
 }
 
 interface ModalContextSchema {
-    renderModal?: {
-        render: boolean;
-        children: ReactNode | null;
-    };
-    setRenderModal: (render: RenderModalSchema) => void;
+  renderModal?: {
+    render: boolean;
+    children: ReactNode | null;
+    onClose?: () => void;
+  };
+  setRenderModal: (render: RenderModalSchema) => void;
 }
 
 const ModalContext = createContext<ModalContextSchema | undefined>(undefined);
 
 interface IModalProvider {
-    children: ReactNode;
+  children: ReactNode;
 }
 
 const ModalProvider: FC<IModalProvider> = ({ children }) => {
-    const [renderModal, setRenderModal] = useState<RenderModalSchema | undefined>({render: false, children: <></>});
+  const [renderModal, setRenderModal] = useState<RenderModalSchema | undefined>({ render: false, children: <></> });
 
-    const value = useMemo(() => ({renderModal, setRenderModal}),[renderModal])
+  const value = useMemo(() => ({ renderModal, setRenderModal }), [renderModal])
 
-    return (<ModalContext.Provider value={value}>{children}</ModalContext.Provider>)
+  return (<ModalContext.Provider value={value}>{children}</ModalContext.Provider>)
 }
 
 const useModal = () => {
-    const context = useContext(ModalContext);
+  const context = useContext(ModalContext);
 
-    if (!context) {
-        throw new Error('useModal must be used within a ModalProvider');
-    }
+  if (!context) {
+    throw new Error('useModal должен использоваться внутри ModalProvider');
+  }
 
-    return context;
+  return context;
 }
 
-export {ModalProvider, useModal}
+export { ModalProvider, useModal }
