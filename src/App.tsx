@@ -21,9 +21,9 @@ import { PageSection } from './components/PageSection/PageSection';
 import { ProfileOrdersPage } from './pages/ProfileOrdersPage';
 
 function App() {
-    const dispatch = useDispatch<AppDispatch>();
-    const items = useSelector((state: RootState) => state.ingredients.items);
-    const loading = useSelector((state: RootState) => state.ingredients.loading);
+  const dispatch = useDispatch<AppDispatch>();
+  const items = useSelector((state: RootState) => state.ingredients.items);
+  const loading = useSelector((state: RootState) => state.ingredients.loading);
   const location = useLocation();
   const background = (location.state as any)?.background;
 
@@ -31,14 +31,14 @@ function App() {
     dispatch(checkAuth());
   }, [dispatch]);
 
-    useEffect(() => {
-        if (loading === 'idle') {
-            dispatch(fetchIngredients());
-        }
-    }, [dispatch, loading]);
+  useEffect(() => {
+    if (loading === 'idle') {
+      dispatch(fetchIngredients());
+    }
+  }, [dispatch, loading]);
 
-    return (
-        <ModalProvider>
+  return (
+    <ModalProvider>
       <Header />
       <PageSection>
         <Routes location={background || location}>
@@ -108,8 +108,8 @@ function App() {
           </Routes>
         )}
       </PageSection>
-        </ModalProvider>
-    );
+    </ModalProvider>
+  );
 }
 
 export default App;
