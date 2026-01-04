@@ -19,6 +19,9 @@ import { ProtectedRouteElement } from './components/ProtectedRouteElement';
 import { IngredientDetailsOverlay } from './components/IngredientDetailsOverlay';
 import { PageSection } from './components/PageSection/PageSection';
 import { ProfileOrdersPage } from './pages/ProfileOrdersPage';
+import { ProfileOrderPage } from './pages/ProfileOrderPage';
+import { FeedPage } from './pages/FeedPage';
+import { FeedOrderPage } from './pages/FeedOrderPage';
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
@@ -100,7 +103,17 @@ function App() {
               </ProtectedRouteElement>
             }
           />
+          <Route
+            path="/profile/orders/:number"
+            element={
+              <ProtectedRouteElement authOnly>
+                <ProfileOrderPage />
+              </ProtectedRouteElement>
+            }
+          />
           <Route path="/ingredients/:id" element={<IngredientPage />} />
+          <Route path="/feed" element={<FeedPage />} />
+          <Route path="/feed/:number" element={<FeedOrderPage />} />
         </Routes>
         {background && (
           <Routes location={location}>

@@ -1,0 +1,92 @@
+.orderCard {
+  display: block;
+  width: 100%;
+  min-height: 246px;
+  padding: 24px;
+  background: #1C1C21;
+  border-radius: 40px;
+  text-decoration: none;
+  color: inherit;
+  transition: opacity 0.3s;
+  box-sizing: border-box;
+}
+
+.orderCard:hover {
+  opacity: 0.8;
+}
+
+.orderHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.orderNumber {
+  margin: 0;
+}
+
+.orderTime {
+  margin: 0;
+  color: #8585AD;
+}
+
+.orderName {
+  margin: 0 0 8px 0;
+}
+
+.orderStatus {
+  margin: 0 0 24px 0;
+}
+
+.orderFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.orderIngredients {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.ingredientImageWrapper {
+  position: relative;
+  margin-left: -16px;
+}
+
+.ingredientImageWrapper:first-child {
+  margin-left: 0;
+}
+
+.ingredientImage {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 2px solid #801AB2;
+  background: #131316;
+  object-fit: cover;
+  display: block;
+}
+
+.ingredientImageOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(19, 19, 22, 0.6);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: #F2F2F3;
+}
+
+.orderPrice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
