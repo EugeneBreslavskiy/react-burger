@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import type { RootState, AppDispatch } from '../services/store';
-import { connectFeedWebSocket, disconnectFeedWebSocket } from '../services/ordersWebSocketSlice';
+import { useAppDispatch, useAppSelector } from '../hooks/redux';
+import { connectFeedWebSocket, disconnectFeedWebSocket, setConnected, setDisconnected, setOrders } from '../services/ordersWebSocketSlice';
 import { Container } from '../components/Container/Container';
 import { Order } from '../services/ordersWebSocketSlice';
 import { OrderCard } from '../components/OrderCard/OrderCard';
@@ -10,16 +9,31 @@ import { CustomScrollBar } from '../components/CustomScrollBar/CustomScrollBar';
 import styles from './FeedPage.module.css';
 
 export const FeedPage = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const { orders } = useSelector(
-    (state: RootState) => state.ordersWebSocket
+  const dispatch = useAppDispatch();
+  const { orders } = useAppSelector(
+    (state) => state.ordersWebSocket
   );
 
   useEffect(() => {
-    dispatch(connectFeedWebSocket());
+    const feedUrl = 'wss://norma.education-services.ru/orders/all';
+    dispatch(connectFeedWebSocket({
+      url: feedUrl,
+      onConnected: () => setConnected(),
+      onDisconnected: () => setDisconnected(),
+      onMessage: (data) => {
+        if (data && typeof data === 'object' && 'orders' in data && Array.isArray(data.orders)) {
+          return setOrders({
+            orders: data.orders as Order[],
+            total: (data as { total?: number }).total || 0,
+            totalToday: (data as { totalToday?: number }).totalToday || 0,
+          });
+        }
+        return null;
+      },
+    }));
 
     return () => {
-      dispatch(disconnectFeedWebSocket());
+      dispatch(disconnectFeedWebSocket({ url: feedUrl }));
     };
   }, [dispatch]);
 

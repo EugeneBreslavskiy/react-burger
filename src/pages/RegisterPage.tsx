@@ -1,6 +1,5 @@
 import { useState, useCallback, useMemo, FormEvent, ChangeEvent } from 'react';
-import { useDispatch } from 'react-redux';
-import type { AppDispatch } from '../services/store';
+import { useAppDispatch } from '../hooks/redux';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { FormContainer } from '../components/FormContainer/FormContainer';
 import { UserForm } from '../components/UserForm/UserForm';
@@ -9,7 +8,7 @@ import { Input } from '@ya.praktikum/react-developer-burger-ui-components';
 import { PageSection } from '../components/PageSection/PageSection';
 
 export const RegisterPage = () => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -38,7 +37,7 @@ export const RegisterPage = () => {
 
     if (!response?.success) return;
 
-    const from = (location.state as any)?.from?.pathname || '/';
+    const from = (location.state as { from?: { pathname?: string } })?.from?.pathname || '/';
 
     navigate(from, { replace: true });
   }, [dispatch, formState.email, formState.password, formState.name, location, navigate]);
@@ -49,7 +48,8 @@ export const RegisterPage = () => {
     </div>
   ]), []);
 
-  const AnyInput: any = Input;
+  type InputProps = Omit<React.ComponentProps<typeof Input>, 'onChange'> & { onChange?: (e: ChangeEvent<HTMLInputElement>) => void };
+  const AnyInput = Input as unknown as React.ComponentType<Partial<InputProps>>;
 
   return (
     <PageSection>

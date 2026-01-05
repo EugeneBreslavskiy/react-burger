@@ -2,8 +2,7 @@ import { FC, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Order } from '../../services/ordersWebSocketSlice';
-import { useSelector } from 'react-redux';
-import type { RootState } from '../../services/store';
+import { useAppSelector } from '../../hooks/redux';
 import styles from './OrderCard.module.css';
 
 interface OrderCardProps {
@@ -12,7 +11,7 @@ interface OrderCardProps {
 }
 
 export const OrderCard: FC<OrderCardProps> = ({ order, basePath = '/feed' }) => {
-  const ingredients = useSelector((state: RootState) => state.ingredients.items);
+  const ingredients = useAppSelector((state) => state.ingredients.items);
 
   const orderIngredients = useMemo(() => {
     if (!ingredients.length || !order.ingredients) return [];

@@ -1,7 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import type { RootState, AppDispatch } from '../services/store';
+import { useAppDispatch, useAppSelector } from '../hooks/redux';
 import { Order, fetchOrderByNumber } from '../services/ordersWebSocketSlice';
 import { PageSection } from '../components/PageSection/PageSection';
 import { Container } from '../components/Container/Container';
@@ -10,11 +9,11 @@ import pageSectionStyles from '../components/PageSection/PageSection.module.css'
 
 export const ProfileOrderPage = () => {
   const { number } = useParams<{ number: string }>();
-  const dispatch = useDispatch<AppDispatch>();
-  const { userOrders, currentOrder, loading } = useSelector(
-    (state: RootState) => state.ordersWebSocket
+  const dispatch = useAppDispatch();
+  const { userOrders, currentOrder, loading } = useAppSelector(
+    (state) => state.ordersWebSocket
   );
-  const ingredients = useSelector((state: RootState) => state.ingredients.items);
+  const ingredients = useAppSelector((state) => state.ingredients.items);
 
   const order = useMemo(() => {
     if (!number) return null;

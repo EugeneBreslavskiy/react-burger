@@ -1,15 +1,14 @@
 import { useState, useCallback, FormEvent } from 'react';
 import { FormContainer } from '../components/FormContainer/FormContainer';
 import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import type { AppDispatch } from '../services/store';
+import { useAppDispatch } from '../hooks/redux';
 import { requestPasswordReset } from '../services/passwordActions';
 import { UserForm } from '../components/UserForm/UserForm';
 import { PageSection } from '../components/PageSection/PageSection';
 
 export const ForgotPasswordPage = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const [email, setEmail] = useState('');
   const onSubmit = useCallback(async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

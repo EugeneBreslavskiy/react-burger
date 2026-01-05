@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react';
 import { Header } from "./components/Header/Header";
 import { BurgerWorkspace } from "./components/BurgerWorkspace/BurgerWorkspace";
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from './hooks/redux';
 import { fetchIngredients } from './services/ingredientsSlice';
 import { checkAuth } from './services/authActions';
-import type { AppDispatch, RootState } from './services/store';
 import { ModalProvider } from "./context/ModalContext/ModalContext";
 import { Routes, Route } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
@@ -24,11 +23,11 @@ import { FeedPage } from './pages/FeedPage';
 import { FeedOrderPage } from './pages/FeedOrderPage';
 
 function App() {
-  const dispatch = useDispatch<AppDispatch>();
-  const items = useSelector((state: RootState) => state.ingredients.items);
-  const loading = useSelector((state: RootState) => state.ingredients.loading);
+  const dispatch = useAppDispatch();
+  const items = useAppSelector((state) => state.ingredients.items);
+  const loading = useAppSelector((state) => state.ingredients.loading);
   const location = useLocation();
-  const background = (location.state as any)?.background;
+  const background = (location.state as { background?: Location })?.background;
 
   useEffect(() => {
     dispatch(checkAuth());

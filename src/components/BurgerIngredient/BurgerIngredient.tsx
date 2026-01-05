@@ -2,8 +2,7 @@ import { FC } from 'react';
 import { Counter } from "@ya.praktikum/react-developer-burger-ui-components";
 import { IngredientSchema } from "../../types/ingredients";
 import { useDrag } from 'react-dnd';
-import { useSelector } from 'react-redux';
-import type { RootState } from '../../services/store';
+import { useAppSelector } from '../../hooks/redux';
 
 import styles from './burger-ingredient-item.module.css';
 import { BurgerCredit } from "../BurgerCredit/BurgerCredit";
@@ -15,7 +14,7 @@ interface IBurgerIngredient {
 const BurgerIngredient: FC<IBurgerIngredient> = ({ description }) => {
   const { _id, name, image, price, type } = description;
 
-  const constructorState = useSelector((state: RootState) => state.burgerConstructor);
+  const constructorState = useAppSelector((state) => state.burgerConstructor);
   const count = (() => {
     if (type === 'bun') {
       return constructorState.bun && constructorState.bun._id === _id ? 2 : 0;

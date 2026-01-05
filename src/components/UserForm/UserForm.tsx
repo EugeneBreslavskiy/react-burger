@@ -31,8 +31,10 @@ const UserFormComponent: FC<UserFormSchema> = ({
   showEmail = true,
   showPassword = true,
 }) => {
-  const AnyInput: any = Input;
-  const AnyPasswordInput: any = PasswordInput;
+  type InputProps = Omit<React.ComponentProps<typeof Input>, 'onChange'> & { onChange?: (e: ChangeEvent<HTMLInputElement>) => void };
+  type PasswordInputProps = Omit<React.ComponentProps<typeof PasswordInput>, 'onChange'> & { onChange?: (e: ChangeEvent<HTMLInputElement>) => void };
+  const AnyInput = Input as unknown as React.ComponentType<Partial<InputProps>>;
+  const AnyPasswordInput = PasswordInput as unknown as React.ComponentType<Partial<PasswordInputProps>>;
   return (
     <form className={styles.UserFormContainer} onSubmit={onSubmit} noValidate>
       <h1 className={`${styles.UserFormTitle} text text_type_main-large`}>{title}</h1>

@@ -1,13 +1,12 @@
 import { FC, useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import type { RootState } from '../../services/store';
+import { useAppSelector } from '../../hooks/redux';
 import { Order } from '../../services/ordersWebSocketSlice';
 import { CustomScrollBar } from '../CustomScrollBar/CustomScrollBar';
 import styles from './FeedStats.module.css';
 
 export const FeedStats: FC = () => {
-  const { orders, total, totalToday } = useSelector(
-    (state: RootState) => state.ordersWebSocket
+  const { orders, total, totalToday } = useAppSelector(
+    (state) => state.ordersWebSocket
   );
 
   const { ready, inProgress } = useMemo(() => {

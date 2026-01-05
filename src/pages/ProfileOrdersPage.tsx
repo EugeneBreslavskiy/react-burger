@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import type { RootState, AppDispatch } from '../services/store';
-import { connectUserWebSocket, disconnectUserWebSocket } from '../services/ordersWebSocketSlice';
+import { useAppDispatch, useAppSelector } from '../hooks/redux';
+import { connectUserWebSocket, disconnectUserWebSocket, setUserConnected, setUserDisconnected, setUserOrders } from '../services/ordersWebSocketSlice';
+import { getCookie } from '../utils/cookies';
 import { PageSection } from '../components/PageSection/PageSection';
 import { Container } from '../components/Container/Container';
 import { ProfileLayout } from '../components/ProfileLayout/ProfileLayout';
@@ -13,16 +13,34 @@ import pageSectionStyles from '../components/PageSection/PageSection.module.css'
 import styles from './ProfileOrdersPage.module.css';
 
 export const ProfileOrdersPage = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const { userOrders } = useSelector(
-    (state: RootState) => state.ordersWebSocket
+  const dispatch = useAppDispatch();
+  const { userOrders } = useAppSelector(
+    (state) => state.ordersWebSocket
   );
 
   useEffect(() => {
-    dispatch(connectUserWebSocket());
+    const token = getCookie('accessToken');
+    const cleanToken = token ? token.replace(/^Bearer\s+/i, '') : '';
+    const userUrl = `wss://norma.education-services.ru/orders${cleanToken ? `?token=${cleanToken}` : ''}`;
+
+    dispatch(connectUserWebSocket({
+      url: userUrl,
+      onConnected: () => setUserConnected(),
+      onDisconnected: () => setUserDisconnected(),
+      onMessage: (data) => {
+        if (data && typeof data === 'object' && 'orders' in data && Array.isArray(data.orders)) {
+          return setUserOrders({
+            orders: data.orders as Order[],
+            total: (data as { total?: number }).total || 0,
+            totalToday: (data as { totalToday?: number }).totalToday || 0,
+          });
+        }
+        return null;
+      },
+    }));
 
     return () => {
-      dispatch(disconnectUserWebSocket());
+      dispatch(disconnectUserWebSocket({ url: userUrl }));
     };
   }, [dispatch]);
 

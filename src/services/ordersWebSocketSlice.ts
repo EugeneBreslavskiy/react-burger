@@ -116,24 +116,41 @@ const ordersWebSocketSlice = createSlice({
   },
 });
 
-export const connectWebSocket = () => ({ type: 'ws/connect' as const });
-export const disconnectWebSocket = () => ({ type: 'ws/disconnect' as const });
-export const sendWebSocketMessage = (payload: any) => ({
+export interface WebSocketConnectPayload {
+  url: string;
+  onConnected: () => { type: string };
+  onDisconnected: () => { type: string };
+  onMessage: (data: unknown) => { type: string; payload?: unknown } | null;
+  onTokenInvalid?: () => void;
+}
+
+export const connectFeedWebSocket = (payload: WebSocketConnectPayload) => ({
+  type: 'ws/connect' as const,
+  payload
+});
+
+export const disconnectFeedWebSocket = (payload: { url: string }) => ({
+  type: 'ws/disconnect' as const,
+  payload
+});
+
+export const sendFeedWebSocketMessage = (payload: { url: string; data: unknown }) => ({
   type: 'ws/send' as const,
   payload
 });
 
-export const connectFeedWebSocket = () => ({ type: 'ws/feed/connect' as const });
-export const disconnectFeedWebSocket = () => ({ type: 'ws/feed/disconnect' as const });
-export const sendFeedWebSocketMessage = (payload: any) => ({
-  type: 'ws/feed/send' as const,
+export const connectUserWebSocket = (payload: WebSocketConnectPayload) => ({
+  type: 'ws/connect' as const,
   payload
 });
 
-export const connectUserWebSocket = () => ({ type: 'ws/user/connect' as const });
-export const disconnectUserWebSocket = () => ({ type: 'ws/user/disconnect' as const });
-export const sendUserWebSocketMessage = (payload: any) => ({
-  type: 'ws/user/send' as const,
+export const disconnectUserWebSocket = (payload: { url: string }) => ({
+  type: 'ws/disconnect' as const,
+  payload
+});
+
+export const sendUserWebSocketMessage = (payload: { url: string; data: unknown }) => ({
+  type: 'ws/send' as const,
   payload
 });
 

@@ -17,11 +17,16 @@ const initialState: IngredientsStateSchema = {
 
 const httpClient = new HttpClient({ baseUrl: API_URL });
 
+interface IngredientsResponse {
+  data?: IngredientSchema[];
+  ingredients?: IngredientSchema[];
+}
+
 export const fetchIngredients = createAsyncThunk<IngredientSchema[]>(
   'ingredients/fetchIngredients',
   async (_, { rejectWithValue }) => {
     try {
-      const res = await httpClient.get<any>('ingredients');
+      const res = await httpClient.get<IngredientSchema[] | IngredientsResponse>('ingredients');
 
       if (Array.isArray(res)) return res as IngredientSchema[];
 

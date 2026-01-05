@@ -1,13 +1,13 @@
 import React, { FC, useEffect } from 'react';
 import { IngredientDetailsSchema } from "../../types/ingredients";
 import { BurgerIngredientNutrient } from "../BurgerIngredietnNutrient/BurgerIngredientNutrient";
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from '../../hooks/redux';
 import { setIngredientId } from "../../services/ingredientIdSlice";
 
 import styles from './ingredient-details.module.css';
 
 const IngredientDetails: FC<IngredientDetailsSchema> = ({ image_large, name, nutrients }) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     return () => {

@@ -37,7 +37,7 @@ class HttpClient {
     });
   }
 
-  async post<T>(path: string, body?: any, init?: RequestInit): Promise<T> {
+  async post<T>(path: string, body?: unknown, init?: RequestInit): Promise<T> {
     const initReq: RequestInit = {
       ...init,
       method: 'POST',
@@ -48,7 +48,7 @@ class HttpClient {
     return this.request(`${this._baseUrl}${path}`, initReq);
   }
 
-  async patch<T>(path: string, body?: any, init?: RequestInit): Promise<T> {
+  async patch<T>(path: string, body?: unknown, init?: RequestInit): Promise<T> {
     const initReq: RequestInit = {
       ...init,
       method: 'PATCH',

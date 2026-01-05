@@ -1,16 +1,15 @@
 import { useState, useCallback, FormEvent } from 'react';
 import { FormContainer } from '../components/FormContainer/FormContainer';
-import { PasswordInput, Input } from '@ya.praktikum/react-developer-burger-ui-components';
+import { Input } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import type { AppDispatch } from '../services/store';
+import { useAppDispatch } from '../hooks/redux';
 import { resetPassword } from '../services/passwordActions';
 import { UserForm } from '../components/UserForm/UserForm';
 import { PageSection } from '../components/PageSection/PageSection';
 
 export const ResetPasswordPage = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const [formState, setFormState] = useState({ password: '', code: '' });
   const onSubmit = useCallback(async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
