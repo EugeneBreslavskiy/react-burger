@@ -1,7 +1,6 @@
 import React, { FC, SyntheticEvent, useEffect, useMemo, useRef, useCallback } from 'react';
 import { ConstructorElement, Button, DragIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useDispatch, useSelector } from 'react-redux';
-import type { AppDispatch, RootState } from '../../services/store';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { setOrderId as setOrderIdAction, clearOrderId } from '../../services/orderIdSlice';
 import { BurgerCredit } from "../BurgerCredit/BurgerCredit";
 import { CustomScrollBar } from "../CustomScrollBar/CustomScrollBar";
@@ -9,17 +8,19 @@ import { useDrop, useDrag } from 'react-dnd';
 import { addIngredient, removeIngredient, moveIngredient, clearConstructor } from '../../services/constructorSlice';
 import { createOrder } from '../../services/orderSlice';
 import { useLocation, useNavigate } from 'react-router-dom';
+import type { IngredientSchema } from '../../types/ingredients';
+import type { ConstructorItem } from '../../services/constructorSlice';
 
 import styles from './burger-constructor.module.css';
 
 const BurgerConstructor: FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const constructorState = useSelector((state: RootState) => state.burgerConstructor);
-  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
-  const orderLoading = useSelector((state: RootState) => state.order.loading);
+  const constructorState = useAppSelector((state) => state.burgerConstructor);
+  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
+  const orderLoading = useAppSelector((state) => state.order.loading);
 
   useEffect(() => {
     return () => {
@@ -27,16 +28,12 @@ const BurgerConstructor: FC = () => {
     }
   }, [dispatch]);
 
-  const [{ isOver }, dropRef] = useDrop(() => ({
+  const [{ isOver }, dropRef] = useDrop<IngredientSchema, unknown, { isOver: boolean }>(() => ({
     accept: 'INGREDIENT',
     collect: (monitor) => ({ isOver: monitor.isOver() }),
-    drop: (item: any) => {
+    drop: (item) => {
       const uuid = String(Date.now() + Math.random());
-      if (item.type === 'bun') {
-        dispatch(addIngredient({ ...item, uuid }));
-      } else {
-        dispatch(addIngredient({ ...item, uuid }));
-      }
+      dispatch(addIngredient({ ...item, uuid }));
     }
   }), [dispatch]);
 
@@ -45,13 +42,13 @@ const BurgerConstructor: FC = () => {
     dispatch(moveIngredient({ fromIndex, toIndex }));
   }, [dispatch]);
 
-  const DraggableConstructorItem: FC<{ item: any, index: number }> = ({ item, index }) => {
+  const DraggableConstructorItem: FC<{ item: ConstructorItem, index: number }> = ({ item, index }) => {
     const ref = useRef<HTMLLIElement | null>(null);
     const dispatchLocal = dispatch;
 
-    const [, drop] = useDrop({
+    const [, drop] = useDrop<{ index: number; id: string }, unknown, unknown>({
       accept: 'CONSTRUCTOR_ITEM',
-      hover(dragged: any, monitor) {
+      hover(dragged, monitor) {
         if (!ref.current) return;
         const dragIndex = dragged.index;
         const hoverIndex = index;
@@ -84,7 +81,11 @@ const BurgerConstructor: FC = () => {
           text={item.name}
           price={item.price}
           thumbnail={item.image}
-          handleClose={() => dispatchLocal(removeIngredient(item.uuid))}
+          handleClose={() => {
+            if (item.uuid) {
+              dispatchLocal(removeIngredient(item.uuid));
+            }
+          }}
         />
       </li>
     );
@@ -104,7 +105,7 @@ const BurgerConstructor: FC = () => {
       ids.push(constructorState.bun._id, constructorState.bun._id);
     }
     if (constructorState?.items && constructorState.items.length) {
-      ids.push(...constructorState.items.map((it: any) => it._id));
+      ids.push(...constructorState.items.map((it) => it._id));
     }
 
     if (ids.length === 0) return;
@@ -125,14 +126,14 @@ const BurgerConstructor: FC = () => {
 
     if (constructorState?.bun) sum += constructorState.bun.price * 2;
     if (constructorState?.items?.length) {
-      sum += constructorState.items.reduce((acc: number, it: any) => acc + (it.price || 0), 0);
+      sum += constructorState.items.reduce((acc, it) => acc + (it.price || 0), 0);
     }
     return sum;
   }, [constructorState]);
 
   return (
     <section>
-      <div ref={dropRef as any} className={styles.BurgerConstructor} style={{ background: isOver ? 'transparent' : undefined }}>
+      <div ref={dropRef} className={styles.BurgerConstructor} style={{ background: isOver ? 'transparent' : undefined }}>
         {constructorState?.bun ? (
           <div className={styles.BurgerConstructorBunWrapper}>
             <ConstructorElement
@@ -149,7 +150,7 @@ const BurgerConstructor: FC = () => {
         <CustomScrollBar height={464}>
           <ul className={styles.BurgerConstructorIngredients}>
             {constructorState?.items?.length ? (
-              constructorState.items.map((it: any, i: number) => (
+              constructorState.items.map((it, i) => (
                 <DraggableConstructorItem key={it.uuid ?? `${it._id}_${i}`} item={it} index={i} />
               ))
             ) : (

@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import type { AppDispatch, RootState } from '../services/store';
+import { useAppDispatch, useAppSelector } from '../hooks/redux';
 import { updateUser } from '../services/authActions';
 import { PageSection } from '../components/PageSection/PageSection';
 import { ProfileLayout } from '../components/ProfileLayout/ProfileLayout';
@@ -16,9 +15,9 @@ interface ProfileForm {
 }
 
 export const ProfilePage = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const user = useSelector((state: RootState) => state.auth.user);
-  const loading = useSelector((state: RootState) => state.auth.loading);
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.auth.user);
+  const loading = useAppSelector((state) => state.auth.loading);
 
   const [initialForm, setInitialForm] = useState<ProfileForm>(() => ({
     name: user?.name || '',

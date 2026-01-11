@@ -1,7 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import type { RootState } from '../services/store';
+import { useAppDispatch, useAppSelector } from '../hooks/redux';
 import { IngredientDetails } from '../components/IngredientDetails/IngredientDetails';
 import { setIngredientId } from '../services/ingredientIdSlice';
 import type { IngredientNutrientSchema } from '../types/ingredients';
@@ -11,10 +10,10 @@ import pageSectionStyles from '../components/PageSection/PageSection.module.css'
 
 export const IngredientPage = () => {
   const { id } = useParams();
-  const dispatch = useDispatch();
-  const items = useSelector((state: RootState) => state.ingredients.items);
+  const dispatch = useAppDispatch();
+  const items = useAppSelector((state) => state.ingredients.items);
 
-  const ingredient = items.find((item: any) => item._id === id);
+  const ingredient = items.find((item) => item._id === id);
 
   useEffect(() => {
     if (id) {

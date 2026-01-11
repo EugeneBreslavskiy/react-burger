@@ -5,6 +5,7 @@ import { authReducer } from './authSlice';
 import { constructorReducer } from './constructorSlice';
 import { orderIdReducer } from './orderIdSlice';
 import { ingredientIdReducer } from './ingredientIdSlice';
+import { ordersWebSocketReducer } from './ordersWebSocketSlice';
 
 const rootReducer = combineReducers({
   ingredients: ingredientsReducer,
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   orderId: orderIdReducer,
   ingredientId: ingredientIdReducer,
   auth: authReducer,
+  ordersWebSocket: ordersWebSocketReducer,
 });
 
 export default rootReducer;

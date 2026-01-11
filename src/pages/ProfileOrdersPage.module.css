@@ -1,0 +1,13 @@
+.ordersTitle {
+  margin-bottom: 24px;
+}
+
+.ordersContent {
+  max-width: 844px;
+}
+
+.ordersList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}

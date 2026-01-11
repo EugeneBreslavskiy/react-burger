@@ -1,7 +1,7 @@
 import { FC, SyntheticEvent, useEffect, useRef, useState } from "react";
 import { GroupedIngredients } from "../../types/ingredients";
 import { BurgerIngredient } from "../BurgerIngredient/BurgerIngredient";
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from '../../hooks/redux';
 import { setIngredientId } from "../../services/ingredientIdSlice";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useInView } from 'react-intersection-observer';
@@ -39,8 +39,8 @@ const SectionObserver: FC<SectionObserverSchema> = ({ title, onInView, sectionRe
     sectionRefs.current[title] = node;
     if (typeof ref === 'function') {
       ref(node);
-    } else if (ref) {
-      (ref as any).current = node;
+    } else if (ref && 'current' in ref) {
+      (ref as React.MutableRefObject<HTMLElement | null>).current = node;
     }
   };
 
@@ -52,7 +52,7 @@ const SectionObserver: FC<SectionObserverSchema> = ({ title, onInView, sectionRe
 };
 
 const BurgerIngredientsList: FC<IBurgerIngredientsList> = ({ ingredients, onTabChange, sectionRefs }) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const location = useLocation();
   const navigate = useNavigate();
   const listRef = useRef<HTMLUListElement | null>(null);

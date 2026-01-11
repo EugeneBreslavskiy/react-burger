@@ -1,7 +1,6 @@
 import React, { FC, ReactElement } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import type { RootState } from '../services/store';
+import { useAppSelector } from '../hooks/redux';
 
 interface ProtectedRouteSchema {
   children: ReactElement;
@@ -16,13 +15,11 @@ export const ProtectedRouteElement: FC<ProtectedRouteSchema> = ({
   guestOnly,
   requireForgotFlow,
 }) => {
-  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
-  const authLoading = useSelector((state: RootState) => state.auth.loading);
-  const user = useSelector((state: RootState) => state.auth.user);
+  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
+  const authLoading = useAppSelector((state) => state.auth.loading);
+  const user = useAppSelector((state) => state.auth.user);
   const location = useLocation();
 
-  // Ждем завершения проверки авторизации только при первой загрузке (idle)
-  // Если пользователь уже авторизован, не скрываем UI при pending (например, при обновлении профиля)
   if (authLoading === 'idle' || (authLoading === 'pending' && !user)) {
     return null;
   }
@@ -42,7 +39,7 @@ export const ProtectedRouteElement: FC<ProtectedRouteSchema> = ({
   }
 
   if (guestOnly && isAuthenticated) {
-    const from = (location.state as any)?.from?.pathname || '/';
+    const from = (location.state as { from?: { pathname?: string } })?.from?.pathname || '/';
     return <Navigate to={from} replace />;
   }
 

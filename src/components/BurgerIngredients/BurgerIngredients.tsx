@@ -4,14 +4,13 @@ import { BurgerIngredientsList } from "../BurgerIngredientsList/BurgerIngredient
 import { CustomScrollBar } from "../CustomScrollBar/CustomScrollBar";
 import { groupIngredientsByType } from "../../utils/groupIngredientsByType";
 import { FILTERS } from "../../utils/filters";
-import { useSelector } from 'react-redux';
-import type { RootState } from '../../services/store';
+import { useAppSelector } from '../../hooks/redux';
 
 import styles from './burger-ingredients.module.css'
 
 
 const BurgerIngredients: FC = () => {
-  const ingredients = useSelector((state: RootState) => state.ingredients.items);
+  const ingredients = useAppSelector((state) => state.ingredients.items);
   const [currentTab, setCurrentTab] = useState(FILTERS[0]);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
@@ -31,7 +30,7 @@ const BurgerIngredients: FC = () => {
         top: Math.max(0, scrollOffset),
         behavior: 'smooth'
       });
-      
+
       // Сбрасываем флаг после завершения скролла
       setTimeout(() => {
         isScrollingRef.current = false;

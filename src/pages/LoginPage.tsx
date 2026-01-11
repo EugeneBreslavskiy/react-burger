@@ -1,6 +1,5 @@
 import { useState, useCallback, useMemo, FormEvent } from 'react';
-import { useDispatch } from 'react-redux';
-import type { AppDispatch } from '../services/store';
+import { useAppDispatch } from '../hooks/redux';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { UserForm } from '../components/UserForm/UserForm';
 import { FormContainer } from '../components/FormContainer/FormContainer';
@@ -8,7 +7,7 @@ import { PageSection } from '../components/PageSection/PageSection';
 import { loginUser } from '../services/authActions';
 
 export const LoginPage = () => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -29,7 +28,7 @@ export const LoginPage = () => {
 
     if (!response?.success) return;
 
-    const from = (location.state as any)?.from?.pathname || '/';
+    const from = (location.state as { from?: { pathname?: string } })?.from?.pathname || '/';
 
     navigate(from, { replace: true });
   }, [dispatch, formState.email, formState.password, location, navigate]);
