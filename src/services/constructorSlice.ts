@@ -46,5 +46,6 @@ export const { addIngredient, removeIngredient, moveIngredient, clearConstructor
 const { reducer } = constructorSlice;
 
 export { reducer as constructorReducer };
+export { initialState };
 
 

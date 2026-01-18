@@ -23,5 +23,6 @@ const orderIdSlice = createSlice({
 
 export const { setOrderId, clearOrderId } = orderIdSlice.actions;
 export const { reducer: orderIdReducer } = orderIdSlice;
+export { initialState };
 
 

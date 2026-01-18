@@ -81,3 +81,4 @@ const orderSlice = createSlice({
 
 export const { reducer } = orderSlice;
 export { reducer as orderReducer };
+export { initialState };
