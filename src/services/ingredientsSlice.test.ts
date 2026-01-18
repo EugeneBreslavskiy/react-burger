@@ -1,4 +1,4 @@
-import { ingredientsReducer, fetchIngredients } from './ingredientsSlice';
+import { ingredientsReducer, fetchIngredients, initialState } from './ingredientsSlice';
 import type { IngredientSchema } from '../types/ingredients';
 
 const mockIngredients: IngredientSchema[] = [
@@ -34,19 +34,10 @@ const mockIngredients: IngredientSchema[] = [
 
 describe('ingredientsReducer', () => {
   it('should return initial state', () => {
-    expect(ingredientsReducer(undefined, { type: 'unknown' })).toEqual({
-      items: [],
-      loading: 'idle',
-      error: null,
-    });
+    expect(ingredientsReducer(undefined, { type: 'unknown' })).toEqual(initialState);
   });
 
   it('should handle fetchIngredients.pending', () => {
-    const initialState = {
-      items: [],
-      loading: 'idle' as const,
-      error: null,
-    };
     const action = { type: fetchIngredients.pending.type };
     const result = ingredientsReducer(initialState, action);
     
@@ -56,16 +47,12 @@ describe('ingredientsReducer', () => {
   });
 
   it('should handle fetchIngredients.fulfilled', () => {
-    const initialState = {
-      items: [],
-      loading: 'pending' as const,
-      error: null,
-    };
+    const statePending = { ...initialState, loading: 'pending' as const };
     const action = {
       type: fetchIngredients.fulfilled.type,
       payload: mockIngredients,
     };
-    const result = ingredientsReducer(initialState, action);
+    const result = ingredientsReducer(statePending, action);
     
     expect(result.loading).toBe('succeeded');
     expect(result.items).toEqual(mockIngredients);
@@ -73,16 +60,12 @@ describe('ingredientsReducer', () => {
   });
 
   it('should handle fetchIngredients.rejected', () => {
-    const initialState = {
-      items: [],
-      loading: 'pending' as const,
-      error: null,
-    };
+    const statePending = { ...initialState, loading: 'pending' as const };
     const action = {
       type: fetchIngredients.rejected.type,
       payload: 'Ошибка загрузки',
     };
-    const result = ingredientsReducer(initialState, action);
+    const result = ingredientsReducer(statePending, action);
     
     expect(result.loading).toBe('failed');
     expect(result.error).toBe('Ошибка загрузки');
@@ -90,29 +73,26 @@ describe('ingredientsReducer', () => {
   });
 
   it('should handle fetchIngredients.rejected with error message', () => {
-    const initialState = {
-      items: [],
-      loading: 'pending' as const,
-      error: null,
-    };
+    const statePending = { ...initialState, loading: 'pending' as const };
     const action = {
       type: fetchIngredients.rejected.type,
       error: { message: 'Network error' },
     };
-    const result = ingredientsReducer(initialState, action);
+    const result = ingredientsReducer(statePending, action);
     
     expect(result.loading).toBe('failed');
     expect(result.error).toBe('Network error');
   });
 
   it('should clear error on pending', () => {
-    const initialState = {
+    const stateWithError = {
+      ...initialState,
       items: mockIngredients,
       loading: 'failed' as const,
       error: 'Previous error',
     };
     const action = { type: fetchIngredients.pending.type };
-    const result = ingredientsReducer(initialState, action);
+    const result = ingredientsReducer(stateWithError, action);
     
     expect(result.loading).toBe('pending');
     expect(result.error).toBeNull();

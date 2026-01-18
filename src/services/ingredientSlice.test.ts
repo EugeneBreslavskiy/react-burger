@@ -1,16 +1,15 @@
-import { ingredientsReducer } from './ingredientSlice';
+import { ingredientsReducer, initialState } from './ingredientSlice';
 
 describe('ingredientsReducer (ingredientSlice)', () => {
   it('should return initial state', () => {
-    expect(ingredientsReducer(undefined, { type: 'unknown' })).toEqual({});
+    expect(ingredientsReducer(undefined, { type: 'unknown' })).toEqual(initialState);
   });
 
   it('should return same state for unknown action', () => {
-    const state = {};
     const action = { type: 'unknown' };
-    const result = ingredientsReducer(state, action);
+    const result = ingredientsReducer(initialState, action);
     
-    expect(result).toBe(state);
-    expect(result).toEqual({});
+    expect(result).toBe(initialState);
+    expect(result).toEqual(initialState);
   });
 });

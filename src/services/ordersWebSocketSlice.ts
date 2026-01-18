@@ -168,5 +168,6 @@ export const {
 } = ordersWebSocketSlice.actions;
 
 export const { reducer: ordersWebSocketReducer } = ordersWebSocketSlice;
+export { initialState };
 export type { OrdersWebSocketState };
 

@@ -11,6 +11,7 @@ import {
   setUserOrders,
   clearUserOrders,
   fetchOrderByNumber,
+  initialState,
 } from './ordersWebSocketSlice';
 import type { Order } from './ordersWebSocketSlice';
 
@@ -28,33 +29,10 @@ const mockOrders: Order[] = [mockOrder];
 
 describe('ordersWebSocketReducer', () => {
   it('should return initial state', () => {
-    expect(ordersWebSocketReducer(undefined, { type: 'unknown' })).toEqual({
-      orders: [],
-      total: 0,
-      totalToday: 0,
-      connected: false,
-      userOrders: [],
-      userTotal: 0,
-      userTotalToday: 0,
-      userConnected: false,
-      loading: false,
-      currentOrder: null,
-    });
+    expect(ordersWebSocketReducer(undefined, { type: 'unknown' })).toEqual(initialState);
   });
 
   it('should handle setConnected', () => {
-    const initialState = {
-      orders: [],
-      total: 0,
-      totalToday: 0,
-      connected: false,
-      userOrders: [],
-      userTotal: 0,
-      userTotalToday: 0,
-      userConnected: false,
-      loading: false,
-      currentOrder: null,
-    };
     const action = setConnected();
     const result = ordersWebSocketReducer(initialState, action);
     
@@ -62,43 +40,21 @@ describe('ordersWebSocketReducer', () => {
   });
 
   it('should handle setDisconnected', () => {
-    const initialState = {
-      orders: [],
-      total: 0,
-      totalToday: 0,
-      connected: true,
-      userOrders: [],
-      userTotal: 0,
-      userTotalToday: 0,
-      userConnected: false,
-      loading: false,
-      currentOrder: null,
-    };
+    const stateConnected = { ...initialState, connected: true };
     const action = setDisconnected();
-    const result = ordersWebSocketReducer(initialState, action);
+    const result = ordersWebSocketReducer(stateConnected, action);
     
     expect(result.connected).toBe(false);
   });
 
   it('should handle setOrders', () => {
-    const initialState = {
-      orders: [],
-      total: 0,
-      totalToday: 0,
-      connected: true,
-      userOrders: [],
-      userTotal: 0,
-      userTotalToday: 0,
-      userConnected: false,
-      loading: true,
-      currentOrder: null,
-    };
+    const stateWithLoading = { ...initialState, connected: true, loading: true };
     const action = setOrders({
       orders: mockOrders,
       total: 100,
       totalToday: 10,
     });
-    const result = ordersWebSocketReducer(initialState, action);
+    const result = ordersWebSocketReducer(stateWithLoading, action);
     
     expect(result.orders).toEqual(mockOrders);
     expect(result.total).toBe(100);
@@ -107,18 +63,6 @@ describe('ordersWebSocketReducer', () => {
   });
 
   it('should handle setLoading', () => {
-    const initialState = {
-      orders: [],
-      total: 0,
-      totalToday: 0,
-      connected: false,
-      userOrders: [],
-      userTotal: 0,
-      userTotalToday: 0,
-      userConnected: false,
-      loading: false,
-      currentOrder: null,
-    };
     const action = setLoading();
     const result = ordersWebSocketReducer(initialState, action);
     
@@ -126,20 +70,15 @@ describe('ordersWebSocketReducer', () => {
   });
 
   it('should handle clearOrders', () => {
-    const initialState = {
+    const stateWithOrders = {
+      ...initialState,
       orders: mockOrders,
       total: 100,
       totalToday: 10,
       connected: true,
-      userOrders: [],
-      userTotal: 0,
-      userTotalToday: 0,
-      userConnected: false,
-      loading: false,
-      currentOrder: null,
     };
     const action = clearOrders();
-    const result = ordersWebSocketReducer(initialState, action);
+    const result = ordersWebSocketReducer(stateWithOrders, action);
     
     expect(result.orders).toEqual([]);
     expect(result.total).toBe(0);
@@ -147,37 +86,14 @@ describe('ordersWebSocketReducer', () => {
   });
 
   it('should handle clearCurrentOrder', () => {
-    const initialState = {
-      orders: [],
-      total: 0,
-      totalToday: 0,
-      connected: false,
-      userOrders: [],
-      userTotal: 0,
-      userTotalToday: 0,
-      userConnected: false,
-      loading: false,
-      currentOrder: mockOrder,
-    };
+    const stateWithOrder = { ...initialState, currentOrder: mockOrder };
     const action = clearCurrentOrder();
-    const result = ordersWebSocketReducer(initialState, action);
+    const result = ordersWebSocketReducer(stateWithOrder, action);
     
     expect(result.currentOrder).toBeNull();
   });
 
   it('should handle setUserConnected', () => {
-    const initialState = {
-      orders: [],
-      total: 0,
-      totalToday: 0,
-      connected: false,
-      userOrders: [],
-      userTotal: 0,
-      userTotalToday: 0,
-      userConnected: false,
-      loading: false,
-      currentOrder: null,
-    };
     const action = setUserConnected();
     const result = ordersWebSocketReducer(initialState, action);
     
@@ -185,43 +101,21 @@ describe('ordersWebSocketReducer', () => {
   });
 
   it('should handle setUserDisconnected', () => {
-    const initialState = {
-      orders: [],
-      total: 0,
-      totalToday: 0,
-      connected: false,
-      userOrders: [],
-      userTotal: 0,
-      userTotalToday: 0,
-      userConnected: true,
-      loading: false,
-      currentOrder: null,
-    };
+    const stateUserConnected = { ...initialState, userConnected: true };
     const action = setUserDisconnected();
-    const result = ordersWebSocketReducer(initialState, action);
+    const result = ordersWebSocketReducer(stateUserConnected, action);
     
     expect(result.userConnected).toBe(false);
   });
 
   it('should handle setUserOrders', () => {
-    const initialState = {
-      orders: [],
-      total: 0,
-      totalToday: 0,
-      connected: false,
-      userOrders: [],
-      userTotal: 0,
-      userTotalToday: 0,
-      userConnected: true,
-      loading: false,
-      currentOrder: null,
-    };
+    const stateUserConnected = { ...initialState, userConnected: true };
     const action = setUserOrders({
       orders: mockOrders,
       total: 50,
       totalToday: 5,
     });
-    const result = ordersWebSocketReducer(initialState, action);
+    const result = ordersWebSocketReducer(stateUserConnected, action);
     
     expect(result.userOrders).toEqual(mockOrders);
     expect(result.userTotal).toBe(50);
@@ -229,20 +123,15 @@ describe('ordersWebSocketReducer', () => {
   });
 
   it('should handle clearUserOrders', () => {
-    const initialState = {
-      orders: [],
-      total: 0,
-      totalToday: 0,
-      connected: false,
+    const stateWithUserOrders = {
+      ...initialState,
       userOrders: mockOrders,
       userTotal: 50,
       userTotalToday: 5,
       userConnected: true,
-      loading: false,
-      currentOrder: null,
     };
     const action = clearUserOrders();
-    const result = ordersWebSocketReducer(initialState, action);
+    const result = ordersWebSocketReducer(stateWithUserOrders, action);
     
     expect(result.userOrders).toEqual([]);
     expect(result.userTotal).toBe(0);
@@ -250,18 +139,6 @@ describe('ordersWebSocketReducer', () => {
   });
 
   it('should handle fetchOrderByNumber.pending', () => {
-    const initialState = {
-      orders: [],
-      total: 0,
-      totalToday: 0,
-      connected: false,
-      userOrders: [],
-      userTotal: 0,
-      userTotalToday: 0,
-      userConnected: false,
-      loading: false,
-      currentOrder: null,
-    };
     const action = { type: fetchOrderByNumber.pending.type };
     const result = ordersWebSocketReducer(initialState, action);
     
@@ -269,43 +146,21 @@ describe('ordersWebSocketReducer', () => {
   });
 
   it('should handle fetchOrderByNumber.fulfilled', () => {
-    const initialState = {
-      orders: [],
-      total: 0,
-      totalToday: 0,
-      connected: false,
-      userOrders: [],
-      userTotal: 0,
-      userTotalToday: 0,
-      userConnected: false,
-      loading: true,
-      currentOrder: null,
-    };
+    const stateLoading = { ...initialState, loading: true };
     const action = {
       type: fetchOrderByNumber.fulfilled.type,
       payload: mockOrder,
     };
-    const result = ordersWebSocketReducer(initialState, action);
+    const result = ordersWebSocketReducer(stateLoading, action);
     
     expect(result.loading).toBe(false);
     expect(result.currentOrder).toEqual(mockOrder);
   });
 
   it('should handle fetchOrderByNumber.rejected', () => {
-    const initialState = {
-      orders: [],
-      total: 0,
-      totalToday: 0,
-      connected: false,
-      userOrders: [],
-      userTotal: 0,
-      userTotalToday: 0,
-      userConnected: false,
-      loading: true,
-      currentOrder: mockOrder,
-    };
+    const stateWithOrder = { ...initialState, loading: true, currentOrder: mockOrder };
     const action = { type: fetchOrderByNumber.rejected.type };
-    const result = ordersWebSocketReducer(initialState, action);
+    const result = ordersWebSocketReducer(stateWithOrder, action);
     
     expect(result.loading).toBe(false);
     expect(result.currentOrder).toBeNull();

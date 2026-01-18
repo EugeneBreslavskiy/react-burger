@@ -1,4 +1,4 @@
-import { constructorReducer, addIngredient, removeIngredient, moveIngredient, clearConstructor } from './constructorSlice';
+import { constructorReducer, addIngredient, removeIngredient, moveIngredient, clearConstructor, initialState } from './constructorSlice';
 import type { ConstructorItem } from './constructorSlice';
 import type { IngredientSchema } from '../types/ingredients';
 
@@ -49,14 +49,10 @@ const mockSauce: IngredientSchema = {
 
 describe('constructorReducer', () => {
   it('should return initial state', () => {
-    expect(constructorReducer(undefined, { type: 'unknown' })).toEqual({
-      items: [],
-      bun: null,
-    });
+    expect(constructorReducer(undefined, { type: 'unknown' })).toEqual(initialState);
   });
 
   it('should handle addIngredient for bun', () => {
-    const initialState = { items: [], bun: null };
     const ingredient: ConstructorItem = { ...mockBun };
     const action = addIngredient(ingredient);
     const result = constructorReducer(initialState, action);
@@ -66,7 +62,6 @@ describe('constructorReducer', () => {
   });
 
   it('should handle addIngredient for main ingredient', () => {
-    const initialState = { items: [], bun: null };
     const ingredient: ConstructorItem = { ...mockMain, uuid: 'uuid-1' };
     const action = addIngredient(ingredient);
     const result = constructorReducer(initialState, action);
@@ -77,7 +72,6 @@ describe('constructorReducer', () => {
   });
 
   it('should handle addIngredient for sauce', () => {
-    const initialState = { items: [], bun: null };
     const ingredient: ConstructorItem = { ...mockSauce, uuid: 'uuid-2' };
     const action = addIngredient(ingredient);
     const result = constructorReducer(initialState, action);
@@ -87,10 +81,10 @@ describe('constructorReducer', () => {
   });
 
   it('should replace bun when adding new bun', () => {
-    const initialState = { items: [], bun: mockBun };
+    const stateWithBun = { ...initialState, bun: mockBun };
     const newBun: ConstructorItem = { ...mockBun, _id: 'bun-2', name: 'Новая булка' };
     const action = addIngredient(newBun);
-    const result = constructorReducer(initialState, action);
+    const result = constructorReducer(stateWithBun, action);
     
     expect(result.bun).toEqual(newBun);
     expect(result.bun?._id).toBe('bun-2');
@@ -99,9 +93,9 @@ describe('constructorReducer', () => {
   it('should handle removeIngredient', () => {
     const ingredient1: ConstructorItem = { ...mockMain, uuid: 'uuid-1' };
     const ingredient2: ConstructorItem = { ...mockSauce, uuid: 'uuid-2' };
-    const initialState = { items: [ingredient1, ingredient2], bun: null };
+    const stateWithItems = { ...initialState, items: [ingredient1, ingredient2] };
     const action = removeIngredient('uuid-1');
-    const result = constructorReducer(initialState, action);
+    const result = constructorReducer(stateWithItems, action);
     
     expect(result.items).toHaveLength(1);
     expect(result.items[0]).toEqual(ingredient2);
@@ -109,9 +103,9 @@ describe('constructorReducer', () => {
 
   it('should not remove ingredient if uuid does not match', () => {
     const ingredient: ConstructorItem = { ...mockMain, uuid: 'uuid-1' };
-    const initialState = { items: [ingredient], bun: null };
+    const stateWithItems = { ...initialState, items: [ingredient] };
     const action = removeIngredient('uuid-999');
-    const result = constructorReducer(initialState, action);
+    const result = constructorReducer(stateWithItems, action);
     
     expect(result.items).toHaveLength(1);
     expect(result.items[0]).toEqual(ingredient);
@@ -121,9 +115,9 @@ describe('constructorReducer', () => {
     const ingredient1: ConstructorItem = { ...mockMain, uuid: 'uuid-1' };
     const ingredient2: ConstructorItem = { ...mockSauce, uuid: 'uuid-2' };
     const ingredient3: ConstructorItem = { ...mockMain, uuid: 'uuid-3' };
-    const initialState = { items: [ingredient1, ingredient2, ingredient3], bun: null };
+    const stateWithItems = { ...initialState, items: [ingredient1, ingredient2, ingredient3] };
     const action = moveIngredient({ fromIndex: 0, toIndex: 2 });
-    const result = constructorReducer(initialState, action);
+    const result = constructorReducer(stateWithItems, action);
     
     expect(result.items).toHaveLength(3);
     expect(result.items[0]).toEqual(ingredient2);
@@ -133,11 +127,10 @@ describe('constructorReducer', () => {
 
   it('should handle clearConstructor', () => {
     const ingredient: ConstructorItem = { ...mockMain, uuid: 'uuid-1' };
-    const initialState = { items: [ingredient], bun: mockBun };
+    const stateWithItemsAndBun = { ...initialState, items: [ingredient], bun: mockBun };
     const action = clearConstructor();
-    const result = constructorReducer(initialState, action);
+    const result = constructorReducer(stateWithItemsAndBun, action);
     
-    expect(result.items).toEqual([]);
-    expect(result.bun).toBeNull();
+    expect(result).toEqual(initialState);
   });
 });

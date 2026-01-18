@@ -1,14 +1,11 @@
-import { ingredientIdReducer, setIngredientId } from './ingredientIdSlice';
+import { ingredientIdReducer, setIngredientId, initialState } from './ingredientIdSlice';
 
 describe('ingredientIdReducer', () => {
   it('should return initial state', () => {
-    expect(ingredientIdReducer(undefined, { type: 'unknown' })).toEqual({
-      ingredientId: undefined,
-    });
+    expect(ingredientIdReducer(undefined, { type: 'unknown' })).toEqual(initialState);
   });
 
   it('should handle setIngredientId', () => {
-    const initialState = { ingredientId: undefined };
     const action = setIngredientId('123');
     const result = ingredientIdReducer(initialState, action);
     
@@ -18,19 +15,17 @@ describe('ingredientIdReducer', () => {
   });
 
   it('should handle setIngredientId with undefined', () => {
-    const initialState = { ingredientId: '123' };
+    const stateWithId = { ingredientId: '123' };
     const action = setIngredientId(undefined);
-    const result = ingredientIdReducer(initialState, action);
+    const result = ingredientIdReducer(stateWithId, action);
     
-    expect(result).toEqual({
-      ingredientId: undefined,
-    });
+    expect(result).toEqual(initialState);
   });
 
   it('should update ingredientId when setting new value', () => {
-    const initialState = { ingredientId: '123' };
+    const stateWithId = { ingredientId: '123' };
     const action = setIngredientId('456');
-    const result = ingredientIdReducer(initialState, action);
+    const result = ingredientIdReducer(stateWithId, action);
     
     expect(result).toEqual({
       ingredientId: '456',
