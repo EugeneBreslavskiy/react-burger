@@ -47,15 +47,8 @@ npm run cypress:run
 npm start
 ```
 
-Функциональные тесты находятся в `cypress/e2e/constructor.cy.ts` и покрывают:
-- Перетаскивание ингредиентов в конструктор
-- Создание заказа
-- Работу модальных окон
-- Удаление ингредиентов из конструктора
-
-## Деплой
-
-Для деплоя на GitHub Pages:
+## Домен проектной работы
+https://breslavskiy.nomorepartiessbs.ru/
 
 ```bash
 npm run deploy
