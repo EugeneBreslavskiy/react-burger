@@ -16,11 +16,13 @@ import { ProfilePage } from './pages/ProfilePage';
 import { IngredientPage } from './pages/IngredientPage';
 import { ProtectedRouteElement } from './components/ProtectedRouteElement';
 import { IngredientDetailsOverlay } from './components/IngredientDetailsOverlay';
+import { OrderOverlay } from './components/OrderOverlay';
 import { PageSection } from './components/PageSection/PageSection';
 import { ProfileOrdersPage } from './pages/ProfileOrdersPage';
 import { ProfileOrderPage } from './pages/ProfileOrderPage';
 import { FeedPage } from './pages/FeedPage';
 import { FeedOrderPage } from './pages/FeedOrderPage';
+import { Modal } from './components/Modal/Modal';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -117,9 +119,12 @@ function App() {
         {background && (
           <Routes location={location}>
             <Route path="/ingredients/:id" element={<IngredientDetailsOverlay />} />
+            <Route path="/feed/:number" element={<OrderOverlay />} />
+            <Route path="/profile/orders/:number" element={<OrderOverlay />} />
           </Routes>
         )}
       </PageSection>
+      <Modal />
     </ModalProvider>
   );
 }
