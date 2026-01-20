@@ -13,12 +13,6 @@ declare global {
   namespace Cypress {
     interface Chainable {
       /**
-       * Custom command to drag ingredient to constructor
-       * @example cy.dragIngredientToConstructor('[data-id="bun-1"]')
-       */
-      dragIngredientToConstructor(ingredientSelector: string): Chainable<void>;
-      
-      /**
        * Custom command to add bun to constructor
        * @example cy.addBunToConstructor()
        */
@@ -48,58 +42,94 @@ declare global {
 // Селекторы
 const SELECTORS = {
   ingredient: '[data-id]',
-  constructor: '[class*="BurgerConstructor"]',
+  constructor: 'section > div[class*="BurgerConstructor"]', // Первый div с классом BurgerConstructor внутри section (это элемент с dropRef)
   orderButton: 'button:contains("Оформить заказ")',
   modal: '[class*="modal"]',
   modalCloseIcon: '[class*="modalCloseIcon"]',
   modalOverlay: '[class*="modalOverlay"]',
-  constructorElement: '[class*="ConstructorElement"]',
+  constructorElement: '[class*="constructor-element"]', // Библиотека создает класс constructor-element (с дефисом)
+  burgerCredit: '[class*="burgerCredit"]', // CSS модуль создает класс burger-credit_burgerCredit__xxx
   emptyConstructor: ':contains("Перетащите ингредиенты сюда")',
 } as const;
 
-// Функция для перетаскивания ингредиента
-Cypress.Commands.add('dragIngredientToConstructor', (ingredientSelector: string) => {
-  cy.get(ingredientSelector).first().as('ingredient');
-  cy.get(SELECTORS.constructor).as('constructor');
+// Вспомогательная функция для drag and drop с react-dnd
+// Использует реальные события через dispatchEvent для работы с HTML5Backend
+const performDragDrop = (sourceSelector: string, targetSelector: string) => {
+  cy.get(sourceSelector).first().then(($source) => {
+    cy.get(targetSelector).first().then(($target) => {
+      const sourceEl = $source[0];
+      const targetEl = $target[0];
+      
+      cy.window().then((win) => {
+        const dataTransfer = new win.DataTransfer();
+        
+        // Создаем события через createEvent с типом Event
+        // dragstart
+        const dragStartEvent = win.document.createEvent('Event');
+        dragStartEvent.initEvent('dragstart', true, true);
+        Object.defineProperty(dragStartEvent, 'dataTransfer', {
+          value: dataTransfer,
+          writable: false,
+          configurable: true,
+        });
+        sourceEl.dispatchEvent(dragStartEvent);
+        
+        // dragenter
+        const dragEnterEvent = win.document.createEvent('Event');
+        dragEnterEvent.initEvent('dragenter', true, true);
+        Object.defineProperty(dragEnterEvent, 'dataTransfer', {
+          value: dataTransfer,
+          writable: false,
+          configurable: true,
+        });
+        targetEl.dispatchEvent(dragEnterEvent);
+        
+        // dragover
+        const dragOverEvent = win.document.createEvent('Event');
+        dragOverEvent.initEvent('dragover', true, true);
+        Object.defineProperty(dragOverEvent, 'dataTransfer', {
+          value: dataTransfer,
+          writable: false,
+          configurable: true,
+        });
+        targetEl.dispatchEvent(dragOverEvent);
+        
+        // drop
+        const dropEvent = win.document.createEvent('Event');
+        dropEvent.initEvent('drop', true, true);
+        Object.defineProperty(dropEvent, 'dataTransfer', {
+          value: dataTransfer,
+          writable: false,
+          configurable: true,
+        });
+        targetEl.dispatchEvent(dropEvent);
+        
+        // dragend
+        const dragEndEvent = win.document.createEvent('Event');
+        dragEndEvent.initEvent('dragend', true, true);
+        sourceEl.dispatchEvent(dragEndEvent);
+      });
+    });
+  });
   
-  const dataTransfer = new DataTransfer();
-  cy.get('@ingredient')
-    .trigger('dragstart', { dataTransfer });
-  cy.get('@constructor')
-    .trigger('dragover', { dataTransfer })
-    .trigger('drop', { dataTransfer });
-});
+  // Даем время для обновления UI
+  cy.wait(500);
+};
 
 // Добавление булки
 Cypress.Commands.add('addBunToConstructor', () => {
-  cy.get(SELECTORS.ingredient).first().as('bun');
-  cy.get(SELECTORS.constructor).as('constructor');
-  
-  const dataTransfer = new DataTransfer();
-  cy.get('@bun')
-    .trigger('dragstart', { dataTransfer });
-  cy.get('@constructor')
-    .trigger('dragover', { dataTransfer })
-    .trigger('drop', { dataTransfer });
+  performDragDrop(SELECTORS.ingredient, SELECTORS.constructor);
 });
 
 // Добавление начинки
 Cypress.Commands.add('addMainIngredientToConstructor', () => {
-  cy.get(SELECTORS.ingredient).eq(1).as('mainIngredient');
-  cy.get(SELECTORS.constructor).as('constructor');
-  
-  const dataTransfer = new DataTransfer();
-  cy.get('@mainIngredient')
-    .trigger('dragstart', { dataTransfer });
-  cy.get('@constructor')
-    .trigger('dragover', { dataTransfer })
-    .trigger('drop', { dataTransfer });
+  performDragDrop(SELECTORS.ingredient, SELECTORS.constructor);
 });
 
 // Создание заказа
 Cypress.Commands.add('createOrder', () => {
   cy.get(SELECTORS.orderButton).click();
-  cy.wait('@createOrder');
+  cy.wait('@createOrder', { timeout: 20000 }); // Увеличиваем таймаут до 20 секунд для запроса, который может занимать до 15 секунд
 });
 
 // Ожидание загрузки ингредиентов
