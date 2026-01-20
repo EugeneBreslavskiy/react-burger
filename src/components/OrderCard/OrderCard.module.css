@@ -9,6 +9,7 @@
   color: inherit;
   transition: opacity 0.3s;
   box-sizing: border-box;
+  cursor: pointer;
 }
 
 .orderCard:hover {

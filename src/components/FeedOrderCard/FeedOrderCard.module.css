@@ -6,6 +6,7 @@
   text-decoration: none;
   color: inherit;
   transition: opacity 0.3s;
+  cursor: pointer;
 }
 
 .orderCard:hover {

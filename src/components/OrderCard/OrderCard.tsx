@@ -1,5 +1,5 @@
 import { FC, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Order } from '../../services/ordersWebSocketSlice';
 import { useAppSelector } from '../../hooks/redux';
@@ -11,7 +11,14 @@ interface OrderCardProps {
 }
 
 export const OrderCard: FC<OrderCardProps> = ({ order, basePath = '/feed' }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const ingredients = useAppSelector((state) => state.ingredients.items);
+  
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    navigate(`${basePath}/${order.number}`, { state: { background: location }, replace: false });
+  };
 
   const orderIngredients = useMemo(() => {
     if (!ingredients.length || !order.ingredients) return [];
@@ -80,8 +87,8 @@ export const OrderCard: FC<OrderCardProps> = ({ order, basePath = '/feed' }) => 
   };
 
   return (
-    <Link
-      to={`${basePath}/${order.number}`}
+    <div
+      onClick={handleClick}
       className={styles.orderCard}
     >
       <div className={styles.orderHeader}>
@@ -131,7 +138,7 @@ export const OrderCard: FC<OrderCardProps> = ({ order, basePath = '/feed' }) => 
           <CurrencyIcon type="primary" />
         </div>
       </div>
-    </Link>
+    </div>
   );
 };
 

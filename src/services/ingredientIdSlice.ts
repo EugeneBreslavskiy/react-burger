@@ -20,5 +20,6 @@ const ingredientIdSlice = createSlice({
 
 export const { setIngredientId } = ingredientIdSlice.actions;
 export const { reducer: ingredientIdReducer } = ingredientIdSlice;
+export { initialState };
 
 

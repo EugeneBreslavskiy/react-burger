@@ -8,7 +8,6 @@ import { Title } from "../Title/Title";
 import { Container } from "../Container/Container";
 import { BurgerIngredients } from "../BurgerIngredients/BurgerIngredients";
 import { BurgerConstructor } from "../BurgerConstructor/BurgerConstructor";
-import { Modal } from "../Modal/Modal";
 import { OrderDetails } from "../OrderDetails/OrderDetails";
 import { clearConstructor } from '../../services/constructorSlice';
 
@@ -47,7 +46,6 @@ const BurgerWorkspace: FC = () => {
           <BurgerConstructor />
         </div>
       </Container>
-      <Modal />
     </section>
   )
 };
